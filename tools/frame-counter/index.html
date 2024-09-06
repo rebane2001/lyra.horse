@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Frame Counter</title>
+    <style>
+        #logText {
+            display: inline;
+            vertical-align: top;
+        }
+        canvas {
+            image-rendering: pixelated;
+        }
+    </style>
+</head>
+<body>
+<h1>XS Frame Counter</h1>
+<p><a href="https://xsleaks.dev/docs/attacks/frame-counting/">Count frames</a> with color visualization, A/B compare the frame count graphs.</p>
+<label for="urlFieldA">URL A: </label><input size="64" id="urlFieldA"/><button id="goA">Go!</button><br>
+<label for="urlFieldA">URL B: </label><input size="64" id="urlFieldB"/><button id="goB">Go!</button><br>
+<input type="checkbox" id="auto" name="auto" /><label for="auto">Test automatically</label> <input type="checkbox" id="colIdx" name="colIdx" checked/><label for="colIdx">Color indexes</label> <input type="checkbox" id="keepPrev" name="keepPrev" checked/><label for="keepPrev">Keep previous</label> <input type="checkbox" id="pauseToggle" name="pauseToggle" /><label for="pauseToggle">Pause</label><br>
+<canvas id="canvas" width="960" height="648"></canvas><br>
+<button id="clearGraphBtn">Clear graph</button><button id="clearLogBtn">Clear log</button><br>
+<pre id="logText"></pre>
+<script type="text/javascript">
+    const urlFieldA = document.getElementById("urlFieldA");
+    const urlFieldB = document.getElementById("urlFieldB");
+    const goA = document.getElementById("goA");
+    const goB = document.getElementById("goB");
+    const auto = document.getElementById("auto");
+    const colIdx = document.getElementById("colIdx");
+    const pauseToggle = document.getElementById("pauseToggle");
+    const clearGraphBtn = document.getElementById("clearGraphBtn");
+    const clearLogBtn = document.getElementById("clearLogBtn");
+    const logText = document.getElementById("logText");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    let currentWindow;
+    let frameRefs = [];
+    let activeFrames = [];
+    let frameCount = 0;
+    let currentFrame = 0;
+    let startTime = 0;
+    let isA = true;
+    let windowClosed = true;
+
+    let colorIndexes = ["00F", "0F0", "F00", "F0F", "FF0", "0FF"];
+
+    function log(s) {
+        console.log(s);
+        logText.innerText += s + "\n";
+    }
+
+    function start(url) {
+        windowClosed = false;
+        startTime = Date.now();
+        frameRefs.length = 0;
+        activeFrames.length = 0;
+        frameCount = 0;
+        currentFrame = 0;
+        log(`Loading ${url}...`);
+        currentWindow = window.open(url, "xspanel", "popup");
+        currentWindow.onload = () => {
+            log(`Loaded at ${Date.now() - startTime}...`);
+        }
+    }
+
+    goA.onclick = () => {
+        isA = true;
+        start(urlFieldA.value);
+    };
+    goB.onclick = () => {
+        isA = false;
+        start(urlFieldB.value);
+    };
+
+    function gatherFrames(w) {
+        let gatheredFrames = [];
+        for (let i = 0; i < w?.frames?.length ?? 0; i++) {
+            gatheredFrames = [...gatheredFrames, w.frames[i], ...gatherFrames(w.frames[i])];
+        }
+        return gatheredFrames;
+    }
+
+    setInterval(() => {
+        if (!currentWindow) return;
+
+        /*
+        for (let i = 0; i < currentWindow.frames.length; i++) {
+            const frame = currentWindow.frames[i];
+            if (!frameRefs.includes(frame)) {
+                log(`${Date.now() - startTime} - New frame appeared`)
+                frameRefs.push(frame);
+            }
+            newActiveFrames.push(frame);
+        }
+        */
+        const newActiveFrames = gatherFrames(currentWindow);
+        for (const frame of newActiveFrames) {
+            if (!frameRefs.includes(frame)) {
+                frameRefs.push(frame);
+                log(`${Date.now() - startTime} - Frame #${frameRefs.indexOf(frame)} appeared`);
+            }
+        }
+        for (const frame of activeFrames) {
+            if (!newActiveFrames.includes(frame))
+                log(`${Date.now() - startTime} - Frame #${frameRefs.indexOf(frame)} disappeared`);
+        }
+        activeFrames = newActiveFrames;
+
+        if (newActiveFrames.length !== frameCount) {
+            frameCount = newActiveFrames.length;
+            if (frameCount == 0) {
+                frameRefs.length = 0;
+            }
+            // log(`${Date.now() - startTime} - ${frameCount}`)
+            renderOnce();
+        }
+
+        if (!windowClosed && currentWindow?.closed) {
+            windowClosed = true;
+            log(`${Date.now() - startTime} - Window closed`);
+        }
+    }, 1);
+
+    function render() {
+        renderOnce();
+        requestAnimationFrame(render);
+    }
+
+    function renderOnce() {
+        if (pauseToggle.checked) return;
+        if (currentFrame >= 960/2 && auto.checked) {
+        // if (currentFrame >= (960 - 4) && auto.checked) {
+            isA = !isA;
+            start(isA ? urlFieldA.value : urlFieldB.value);
+            return;
+        }
+
+        let y = 1.5 + (isA ? 0 : 322);
+
+
+
+        ctx.strokeStyle = `#${isA ? "00F" : "F00" }`;
+        ctx.lineWidth = 1;
+        ctx.strokeRect(1.5,y,960 - 4,320);
+
+        const lineX = 1.5 + currentFrame % (960 - 4);
+
+        if (!keepPrev.checked) {
+            ctx.clearRect(lineX, y + 0.5, 1.5, 320-1);
+            ctx.globalAlpha = 0.8;
+        } else {
+            ctx.globalAlpha = colIdx.checked ? 0.5 : 0.05;
+        }
+
+        if (colIdx.checked) {
+            let currentOffset = 0;
+            for (const frame of activeFrames) {
+                ctx.strokeStyle = `#${colorIndexes[frameRefs.indexOf(frame)%colorIndexes.length]}`;
+                ctx.beginPath();
+                ctx.moveTo(lineX, y + 0.5 + 320 - currentOffset);
+                ctx.lineTo(lineX, y + 0.5 + 320 - currentOffset - 10);
+                ctx.stroke();
+                currentOffset += 10;
+            }
+        } else {
+            ctx.beginPath();
+            ctx.moveTo(lineX, y + 0.5 + 320);
+            ctx.lineTo(lineX, y + 0.5 + 320 - frameCount*10);
+            ctx.stroke();
+        }
+
+        ctx.globalAlpha = 1;
+
+        // currentFrame++;
+        currentFrame += 1;
+    }
+
+    clearGraphBtn.onclick = () => ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+    clearLogBtn.onclick = () => logText.innerText = "";
+
+    //requestAnimationFrame(render);
+    setInterval(renderOnce, Math.floor(1000/60));
+</script>
+</body>
+</html>
