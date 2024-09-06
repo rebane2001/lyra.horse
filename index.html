@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width">
   <title>lyra.horse</title>
   <meta property="og:url" content="https://lyra.horse/">
-  <meta property="og:site_name" content="lyra.horse">
   <meta property="og:title" content="lyra.horse">
-  <meta name="description" content="my cool website">
-  <meta property="og:description" content="my cool website">
+  <meta name="description" content="hi!">
+  <meta property="og:description" content="hi!">
   <meta property="og:locale" content="en-us">
   <meta property="og:type" content="website">
   <meta content="#8CFFDB" data-react-helmet="true" name="theme-color" />
@@ -20,6 +19,12 @@
     }
     .underline {
         text-decoration: underline;
+    }
+    .badge img {
+        image-rendering: pixelated;
+    }
+    .badge:hover img {
+        outline: solid 1px #000;
     }
   </style>
 </head>
@@ -72,12 +77,13 @@
     <li>bluesky: <a href="https://bsky.app/profile/rebane2001.bsky.social">@rebane2001.bsky.social</a></li>
   </ul>
   <hr/>
-  <div class="badges">
+  <div id="badges">
+    <!-- note: i've converted some of the gif badges into apngs instead so they take up less space -->
     <span class="badge"><a href="https://lyra.horse/"><img loading="lazy" src="/badges/lyra.horse.png"/></a></span>
     <span class="badge"><a href="https://maia.crimew.gay/"><img loading="lazy" src="/badges/maia.crimew.gay.png"/></a></span>
     <span class="badge"><a href="https://oat.zone/"><img loading="lazy" src="/badges/oatzone.gif"/></a></span>
-    <!-- original @ /badges/lensdeer.neocities.org.gif, changed to static png to make this page smaller -->
     <span class="badge"><a href="https://lensdeer.neocities.org/"><img loading="lazy" src="/badges/lensdeer.neocities.org.png"/></a></span>
+    <span class="badge"><a href="https://kibty.town/"><img loading="lazy" src="/badges/kibty.town.png"/></a></span>
   </div>
   <pre style="display:none">
                    [38;5;80m▄▄▄▄[39m
