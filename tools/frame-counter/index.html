@@ -55,7 +55,7 @@
     function start(url) {
         const filteredUrl = new URL(url);
         // ty NDevTK for noticing this self-XSS
-        if (["http:","https:"].includes(filteredUrl.protocol.toLowerCase())) {
+        if (!["http:","https:"].includes(filteredUrl.protocol.toLowerCase())) {
             if (filteredUrl.protocol == "javascript:")
                 alert("🦆");
             return;
