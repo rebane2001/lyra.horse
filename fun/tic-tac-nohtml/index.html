@@ -1,0 +1,863 @@
+<style>
+	/* Made with <3 by Lyra Rebane in April 2025 */
+	head {
+		display: block;
+    	width: 100dvw;
+    	font-family: system-ui, sans-serif;
+		&::before {
+			position: absolute;
+			bottom: 32px;
+			width: 100dvw;
+			text-align: center;
+			white-space: pre;
+			content: "This is an implementation of the Tic-Tac-Toe game in pure CSS - no HTML or JavaScript is used.\A Fully playable, but no win/lose screens atm (technically possible, but I'm lazy).\A Works on Chrome and Firefox, desktop-only.\A \A This project took me about 3 hours from start to finish :D\A Shout out to Gareth Heyes for the project idea/challenge :)\A Lyra Rebane, 2025";
+		}
+		&::after {
+			text-align: center;
+			pointer-events: none;
+			display: block;
+			position: absolute;
+			width: 100dvw;
+			font-weight: bold;
+			font-size: 90px;
+			content: "Tic-Tac-NoHTML";
+			color: #333;
+			text-shadow: 3px 2px #FFF;
+		}
+	}
+
+	/* Current mousable square (int 0-19) */
+	@property --sqCurrent {
+  		syntax: "<integer>";
+  		inherits: true;
+  		initial-value: 0;
+	}
+
+	/* Playfield squares as strings */
+	@property --st11 {
+  		syntax: "<string>";
+  		inherits: true;
+  		initial-value: " ";
+	}
+	@property --st21 {
+  		syntax: "<string>";
+  		inherits: true;
+  		initial-value: " ";
+	}
+	@property --st31 {
+  		syntax: "<string>";
+  		inherits: true;
+  		initial-value: " ";
+	}
+	@property --st12 {
+  		syntax: "<string>";
+  		inherits: true;
+  		initial-value: " ";
+	}
+	@property --st22 {
+  		syntax: "<string>";
+  		inherits: true;
+  		initial-value: " ";
+	}
+	@property --st32 {
+  		syntax: "<string>";
+  		inherits: true;
+  		initial-value: " ";
+	}
+	@property --st13 {
+  		syntax: "<string>";
+  		inherits: true;
+  		initial-value: " ";
+	}
+	@property --st23 {
+  		syntax: "<string>";
+  		inherits: true;
+  		initial-value: " ";
+	}
+	@property --st33 {
+  		syntax: "<string>";
+  		inherits: true;
+  		initial-value: " ";
+	}
+
+	/* Playfield squares as ints */
+	@property --sq11 {
+  		syntax: "<integer>";
+  		inherits: true;
+  		initial-value: 0;
+	}
+	@property --sq21 {
+  		syntax: "<integer>";
+  		inherits: true;
+  		initial-value: 0;
+	}
+	@property --sq31 {
+  		syntax: "<integer>";
+  		inherits: true;
+  		initial-value: 0;
+	}
+	@property --sq12 {
+  		syntax: "<integer>";
+  		inherits: true;
+  		initial-value: 0;
+	}
+	@property --sq22 {
+  		syntax: "<integer>";
+  		inherits: true;
+  		initial-value: 0;
+	}
+	@property --sq32 {
+  		syntax: "<integer>";
+  		inherits: true;
+  		initial-value: 0;
+	}
+	@property --sq13 {
+  		syntax: "<integer>";
+  		inherits: true;
+  		initial-value: 0;
+	}
+	@property --sq23 {
+  		syntax: "<integer>";
+  		inherits: true;
+  		initial-value: 0;
+	}
+	@property --sq33 {
+  		syntax: "<integer>";
+  		inherits: true;
+  		initial-value: 0;
+	}
+
+	/* Rotate through mousable squares */
+	@keyframes setSq {
+		0% {
+			--sqCurrent: 0;
+		}
+		100% {
+			--sqCurrent: 19;
+		}
+	}
+
+	html {
+		transition: --sqCurrent 100000s 100000s;
+		animation: setSq 0.3s steps(19) infinite;
+
+		background: #DDD;
+
+		container-type: inline-size;
+  		container-name: html;
+  		width: calc(10000px + var(--sqCurrent) * 1px);
+
+  		overflow: hidden;
+
+  		&:has(body:hover), &:has(body:active) {
+  			animation-play-state: paused;
+  		}
+	}
+
+	html, body, head {
+		padding: 0;
+		margin: 0;
+	}
+
+	body {
+		transition:
+					--sq11 1000000000s 1000000000s,
+					--sq21 1000000000s 1000000000s,
+					--sq31 1000000000s 1000000000s,
+					--sq12 1000000000s 1000000000s,
+					--sq22 1000000000s 1000000000s,
+					--sq32 1000000000s 1000000000s,
+					--sq13 1000000000s 1000000000s,
+					--sq23 1000000000s 1000000000s,
+					--sq33 1000000000s 1000000000s,
+					--st11 1000000000s 1000000000s allow-discrete,
+					--st21 1000000000s 1000000000s allow-discrete,
+					--st31 1000000000s 1000000000s allow-discrete,
+					--st12 1000000000s 1000000000s allow-discrete,
+					--st22 1000000000s 1000000000s allow-discrete,
+					--st32 1000000000s 1000000000s allow-discrete,
+					--st13 1000000000s 1000000000s allow-discrete,
+					--st23 1000000000s 1000000000s allow-discrete,
+					--st33 1000000000s 1000000000s allow-discrete;
+	}
+	body {
+		position: absolute;
+		translate: -50% -50%;
+		top: calc(50dvh - 40px);
+    	left: 50dvw;
+
+		display: block;
+		pointer-events: none;
+		font-family: monospace;
+
+		width: 295px;
+		height: 289px;
+		background: linear-gradient(0deg, #FFF 90%, #000), linear-gradient(-90deg, #FFF 90%, #000);
+		background-size: 33.34% 33.34%;
+		background-position: -1px -1px;
+		background-blend-mode: multiply;
+
+		overflow: clip;
+		border: 8px ridge #999;
+		border-radius: 10px;
+		box-shadow: 0 0px 26px #FFF, 0 0px 33px #FFF, 0 0px 64px #FFF;
+
+		&:hover::after {
+			opacity: 1;
+			transition: opacity 0.1s;
+		}
+
+		&::before {
+			display: block;
+			position: absolute;
+			top: 0;
+			left: 25px;
+			white-space: pre;
+			content: var(--st11) " " var(--st21) " " var(--st31) "\A" var(--st12) " " var(--st22) " " var(--st32) "\A" var(--st13) " " var(--st23) " " var(--st33);
+			font-size: 90px;
+			width: 256px;
+			height: 256px;
+			line-height: 96px;
+			pointer-events: none;
+			font-weight: bold;
+			color: #333;
+		}
+
+		&::after {
+			cursor: pointer;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 96px;
+			height: 96px;
+			pointer-events: none;
+			background: linear-gradient(0deg, #EEE 89%, #000), linear-gradient(-90deg, #EEE 89%, #000);
+			background-blend-mode: multiply;
+			translate: calc(mod(var(--sqCurrent),3)*99px) calc(mod(round(down, var(--sqCurrent) / 3),3)*96px);
+			font-size: 90px;
+			color: #8890;
+			text-shadow: 2px 2px #000;
+			font-weight: bold;
+			opacity: 0;
+			display: flex;
+        	justify-content: center;
+        	align-items: center;
+        	line-height: 0;
+		}
+	}
+
+	/* CSS for every mousable square */
+	@container html (width: 10000px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq11) - calc(mod(var(--sq21) + var(--sq31) + var(--sq12) + var(--sq22) + var(--sq32) + var(--sq13) + var(--sq23) + var(--sq33) + 0,2))));
+					pointer-events: auto;
+					content: "X";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq11: 1;
+					--st11: "X";
+					transition:
+						--sq11 0s 0s,
+						--sq21 1000000000s 1000000000s,
+						--sq31 1000000000s 1000000000s,
+						--sq12 1000000000s 1000000000s,
+						--sq22 1000000000s 1000000000s,
+						--sq32 1000000000s 1000000000s,
+						--sq13 1000000000s 1000000000s,
+						--sq23 1000000000s 1000000000s,
+						--sq33 1000000000s 1000000000s,
+						--st11 0s 0s allow-discrete,
+						--st21 1000000000s 1000000000s allow-discrete,
+						--st31 1000000000s 1000000000s allow-discrete,
+						--st12 1000000000s 1000000000s allow-discrete,
+						--st22 1000000000s 1000000000s allow-discrete,
+						--st32 1000000000s 1000000000s allow-discrete,
+						--st13 1000000000s 1000000000s allow-discrete,
+						--st23 1000000000s 1000000000s allow-discrete,
+						--st33 1000000000s 1000000000s allow-discrete;
+		
+			  	}
+			}
+		}
+	@container html (width: 10001px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq21) - calc(mod(var(--sq11) + var(--sq31) + var(--sq12) + var(--sq22) + var(--sq32) + var(--sq13) + var(--sq23) + var(--sq33) + 0,2))));
+					pointer-events: auto;
+					content: "X";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq21: 1;
+					--st21: "X";
+					transition:
+						--sq11 1000000000s 1000000000s,
+						--sq21 0s 0s,
+						--sq31 1000000000s 1000000000s,
+						--sq12 1000000000s 1000000000s,
+						--sq22 1000000000s 1000000000s,
+						--sq32 1000000000s 1000000000s,
+						--sq13 1000000000s 1000000000s,
+						--sq23 1000000000s 1000000000s,
+						--sq33 1000000000s 1000000000s,
+						--st11 1000000000s 1000000000s allow-discrete,
+						--st21 0s 0s allow-discrete,
+						--st31 1000000000s 1000000000s allow-discrete,
+						--st12 1000000000s 1000000000s allow-discrete,
+						--st22 1000000000s 1000000000s allow-discrete,
+						--st32 1000000000s 1000000000s allow-discrete,
+						--st13 1000000000s 1000000000s allow-discrete,
+						--st23 1000000000s 1000000000s allow-discrete,
+						--st33 1000000000s 1000000000s allow-discrete;
+		
+			  	}
+			}
+		}
+	@container html (width: 10002px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq31) - calc(mod(var(--sq11) + var(--sq21) + var(--sq12) + var(--sq22) + var(--sq32) + var(--sq13) + var(--sq23) + var(--sq33) + 0,2))));
+					pointer-events: auto;
+					content: "X";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq31: 1;
+					--st31: "X";
+					transition:
+						--sq11 1000000000s 1000000000s,
+						--sq21 1000000000s 1000000000s,
+						--sq31 0s 0s,
+						--sq12 1000000000s 1000000000s,
+						--sq22 1000000000s 1000000000s,
+						--sq32 1000000000s 1000000000s,
+						--sq13 1000000000s 1000000000s,
+						--sq23 1000000000s 1000000000s,
+						--sq33 1000000000s 1000000000s,
+						--st11 1000000000s 1000000000s allow-discrete,
+						--st21 1000000000s 1000000000s allow-discrete,
+						--st31 0s 0s allow-discrete,
+						--st12 1000000000s 1000000000s allow-discrete,
+						--st22 1000000000s 1000000000s allow-discrete,
+						--st32 1000000000s 1000000000s allow-discrete,
+						--st13 1000000000s 1000000000s allow-discrete,
+						--st23 1000000000s 1000000000s allow-discrete,
+						--st33 1000000000s 1000000000s allow-discrete;
+		
+			  	}
+			}
+		}
+	@container html (width: 10003px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq12) - calc(mod(var(--sq11) + var(--sq21) + var(--sq31) + var(--sq22) + var(--sq32) + var(--sq13) + var(--sq23) + var(--sq33) + 0,2))));
+					pointer-events: auto;
+					content: "X";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq12: 1;
+					--st12: "X";
+					transition:
+						--sq11 1000000000s 1000000000s,
+						--sq21 1000000000s 1000000000s,
+						--sq31 1000000000s 1000000000s,
+						--sq12 0s 0s,
+						--sq22 1000000000s 1000000000s,
+						--sq32 1000000000s 1000000000s,
+						--sq13 1000000000s 1000000000s,
+						--sq23 1000000000s 1000000000s,
+						--sq33 1000000000s 1000000000s,
+						--st11 1000000000s 1000000000s allow-discrete,
+						--st21 1000000000s 1000000000s allow-discrete,
+						--st31 1000000000s 1000000000s allow-discrete,
+						--st12 0s 0s allow-discrete,
+						--st22 1000000000s 1000000000s allow-discrete,
+						--st32 1000000000s 1000000000s allow-discrete,
+						--st13 1000000000s 1000000000s allow-discrete,
+						--st23 1000000000s 1000000000s allow-discrete,
+						--st33 1000000000s 1000000000s allow-discrete;
+		
+			  	}
+			}
+		}
+	@container html (width: 10004px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq22) - calc(mod(var(--sq11) + var(--sq21) + var(--sq31) + var(--sq12) + var(--sq32) + var(--sq13) + var(--sq23) + var(--sq33) + 0,2))));
+					pointer-events: auto;
+					content: "X";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq22: 1;
+					--st22: "X";
+					transition:
+						--sq11 1000000000s 1000000000s,
+						--sq21 1000000000s 1000000000s,
+						--sq31 1000000000s 1000000000s,
+						--sq12 1000000000s 1000000000s,
+						--sq22 0s 0s,
+						--sq32 1000000000s 1000000000s,
+						--sq13 1000000000s 1000000000s,
+						--sq23 1000000000s 1000000000s,
+						--sq33 1000000000s 1000000000s,
+						--st11 1000000000s 1000000000s allow-discrete,
+						--st21 1000000000s 1000000000s allow-discrete,
+						--st31 1000000000s 1000000000s allow-discrete,
+						--st12 1000000000s 1000000000s allow-discrete,
+						--st22 0s 0s allow-discrete,
+						--st32 1000000000s 1000000000s allow-discrete,
+						--st13 1000000000s 1000000000s allow-discrete,
+						--st23 1000000000s 1000000000s allow-discrete,
+						--st33 1000000000s 1000000000s allow-discrete;
+		
+			  	}
+			}
+		}
+	@container html (width: 10005px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq32) - calc(mod(var(--sq11) + var(--sq21) + var(--sq31) + var(--sq12) + var(--sq22) + var(--sq13) + var(--sq23) + var(--sq33) + 0,2))));
+					pointer-events: auto;
+					content: "X";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq32: 1;
+					--st32: "X";
+					transition:
+						--sq11 1000000000s 1000000000s,
+						--sq21 1000000000s 1000000000s,
+						--sq31 1000000000s 1000000000s,
+						--sq12 1000000000s 1000000000s,
+						--sq22 1000000000s 1000000000s,
+						--sq32 0s 0s,
+						--sq13 1000000000s 1000000000s,
+						--sq23 1000000000s 1000000000s,
+						--sq33 1000000000s 1000000000s,
+						--st11 1000000000s 1000000000s allow-discrete,
+						--st21 1000000000s 1000000000s allow-discrete,
+						--st31 1000000000s 1000000000s allow-discrete,
+						--st12 1000000000s 1000000000s allow-discrete,
+						--st22 1000000000s 1000000000s allow-discrete,
+						--st32 0s 0s allow-discrete,
+						--st13 1000000000s 1000000000s allow-discrete,
+						--st23 1000000000s 1000000000s allow-discrete,
+						--st33 1000000000s 1000000000s allow-discrete;
+		
+			  	}
+			}
+		}
+	@container html (width: 10006px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq13) - calc(mod(var(--sq11) + var(--sq21) + var(--sq31) + var(--sq12) + var(--sq22) + var(--sq32) + var(--sq23) + var(--sq33) + 0,2))));
+					pointer-events: auto;
+					content: "X";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq13: 1;
+					--st13: "X";
+					transition:
+						--sq11 1000000000s 1000000000s,
+						--sq21 1000000000s 1000000000s,
+						--sq31 1000000000s 1000000000s,
+						--sq12 1000000000s 1000000000s,
+						--sq22 1000000000s 1000000000s,
+						--sq32 1000000000s 1000000000s,
+						--sq13 0s 0s,
+						--sq23 1000000000s 1000000000s,
+						--sq33 1000000000s 1000000000s,
+						--st11 1000000000s 1000000000s allow-discrete,
+						--st21 1000000000s 1000000000s allow-discrete,
+						--st31 1000000000s 1000000000s allow-discrete,
+						--st12 1000000000s 1000000000s allow-discrete,
+						--st22 1000000000s 1000000000s allow-discrete,
+						--st32 1000000000s 1000000000s allow-discrete,
+						--st13 0s 0s allow-discrete,
+						--st23 1000000000s 1000000000s allow-discrete,
+						--st33 1000000000s 1000000000s allow-discrete;
+		
+			  	}
+			}
+		}
+	@container html (width: 10007px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq23) - calc(mod(var(--sq11) + var(--sq21) + var(--sq31) + var(--sq12) + var(--sq22) + var(--sq32) + var(--sq13) + var(--sq33) + 0,2))));
+					pointer-events: auto;
+					content: "X";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq23: 1;
+					--st23: "X";
+					transition:
+						--sq11 1000000000s 1000000000s,
+						--sq21 1000000000s 1000000000s,
+						--sq31 1000000000s 1000000000s,
+						--sq12 1000000000s 1000000000s,
+						--sq22 1000000000s 1000000000s,
+						--sq32 1000000000s 1000000000s,
+						--sq13 1000000000s 1000000000s,
+						--sq23 0s 0s,
+						--sq33 1000000000s 1000000000s,
+						--st11 1000000000s 1000000000s allow-discrete,
+						--st21 1000000000s 1000000000s allow-discrete,
+						--st31 1000000000s 1000000000s allow-discrete,
+						--st12 1000000000s 1000000000s allow-discrete,
+						--st22 1000000000s 1000000000s allow-discrete,
+						--st32 1000000000s 1000000000s allow-discrete,
+						--st13 1000000000s 1000000000s allow-discrete,
+						--st23 0s 0s allow-discrete,
+						--st33 1000000000s 1000000000s allow-discrete;
+		
+			  	}
+			}
+		}
+	@container html (width: 10008px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq33) - calc(mod(var(--sq11) + var(--sq21) + var(--sq31) + var(--sq12) + var(--sq22) + var(--sq32) + var(--sq13) + var(--sq23) + 0,2))));
+					pointer-events: auto;
+					content: "X";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq33: 1;
+					--st33: "X";
+					transition:
+						--sq11 1000000000s 1000000000s,
+						--sq21 1000000000s 1000000000s,
+						--sq31 1000000000s 1000000000s,
+						--sq12 1000000000s 1000000000s,
+						--sq22 1000000000s 1000000000s,
+						--sq32 1000000000s 1000000000s,
+						--sq13 1000000000s 1000000000s,
+						--sq23 1000000000s 1000000000s,
+						--sq33 0s 0s,
+						--st11 1000000000s 1000000000s allow-discrete,
+						--st21 1000000000s 1000000000s allow-discrete,
+						--st31 1000000000s 1000000000s allow-discrete,
+						--st12 1000000000s 1000000000s allow-discrete,
+						--st22 1000000000s 1000000000s allow-discrete,
+						--st32 1000000000s 1000000000s allow-discrete,
+						--st13 1000000000s 1000000000s allow-discrete,
+						--st23 1000000000s 1000000000s allow-discrete,
+						--st33 0s 0s allow-discrete;
+		
+			  	}
+			}
+		}
+	@container html (width: 10009px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq11) - calc(mod(var(--sq21) + var(--sq31) + var(--sq12) + var(--sq22) + var(--sq32) + var(--sq13) + var(--sq23) + var(--sq33) + 1,2))));
+					pointer-events: auto;
+					content: "O";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq11: 3;
+					--st11: "O";
+					transition:
+						--sq11 0s 0s,
+						--sq21 1000000000s 1000000000s,
+						--sq31 1000000000s 1000000000s,
+						--sq12 1000000000s 1000000000s,
+						--sq22 1000000000s 1000000000s,
+						--sq32 1000000000s 1000000000s,
+						--sq13 1000000000s 1000000000s,
+						--sq23 1000000000s 1000000000s,
+						--sq33 1000000000s 1000000000s,
+						--st11 0s 0s allow-discrete,
+						--st21 1000000000s 1000000000s allow-discrete,
+						--st31 1000000000s 1000000000s allow-discrete,
+						--st12 1000000000s 1000000000s allow-discrete,
+						--st22 1000000000s 1000000000s allow-discrete,
+						--st32 1000000000s 1000000000s allow-discrete,
+						--st13 1000000000s 1000000000s allow-discrete,
+						--st23 1000000000s 1000000000s allow-discrete,
+						--st33 1000000000s 1000000000s allow-discrete;
+		
+			  	}
+			}
+		}
+	@container html (width: 10010px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq21) - calc(mod(var(--sq11) + var(--sq31) + var(--sq12) + var(--sq22) + var(--sq32) + var(--sq13) + var(--sq23) + var(--sq33) + 1,2))));
+					pointer-events: auto;
+					content: "O";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq21: 3;
+					--st21: "O";
+					transition:
+						--sq11 1000000000s 1000000000s,
+						--sq21 0s 0s,
+						--sq31 1000000000s 1000000000s,
+						--sq12 1000000000s 1000000000s,
+						--sq22 1000000000s 1000000000s,
+						--sq32 1000000000s 1000000000s,
+						--sq13 1000000000s 1000000000s,
+						--sq23 1000000000s 1000000000s,
+						--sq33 1000000000s 1000000000s,
+						--st11 1000000000s 1000000000s allow-discrete,
+						--st21 0s 0s allow-discrete,
+						--st31 1000000000s 1000000000s allow-discrete,
+						--st12 1000000000s 1000000000s allow-discrete,
+						--st22 1000000000s 1000000000s allow-discrete,
+						--st32 1000000000s 1000000000s allow-discrete,
+						--st13 1000000000s 1000000000s allow-discrete,
+						--st23 1000000000s 1000000000s allow-discrete,
+						--st33 1000000000s 1000000000s allow-discrete;
+		
+			  	}
+			}
+		}
+	@container html (width: 10011px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq31) - calc(mod(var(--sq11) + var(--sq21) + var(--sq12) + var(--sq22) + var(--sq32) + var(--sq13) + var(--sq23) + var(--sq33) + 1,2))));
+					pointer-events: auto;
+					content: "O";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq31: 3;
+					--st31: "O";
+					transition:
+						--sq11 1000000000s 1000000000s,
+						--sq21 1000000000s 1000000000s,
+						--sq31 0s 0s,
+						--sq12 1000000000s 1000000000s,
+						--sq22 1000000000s 1000000000s,
+						--sq32 1000000000s 1000000000s,
+						--sq13 1000000000s 1000000000s,
+						--sq23 1000000000s 1000000000s,
+						--sq33 1000000000s 1000000000s,
+						--st11 1000000000s 1000000000s allow-discrete,
+						--st21 1000000000s 1000000000s allow-discrete,
+						--st31 0s 0s allow-discrete,
+						--st12 1000000000s 1000000000s allow-discrete,
+						--st22 1000000000s 1000000000s allow-discrete,
+						--st32 1000000000s 1000000000s allow-discrete,
+						--st13 1000000000s 1000000000s allow-discrete,
+						--st23 1000000000s 1000000000s allow-discrete,
+						--st33 1000000000s 1000000000s allow-discrete;
+		
+			  	}
+			}
+		}
+	@container html (width: 10012px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq12) - calc(mod(var(--sq11) + var(--sq21) + var(--sq31) + var(--sq22) + var(--sq32) + var(--sq13) + var(--sq23) + var(--sq33) + 1,2))));
+					pointer-events: auto;
+					content: "O";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq12: 3;
+					--st12: "O";
+					transition:
+						--sq11 1000000000s 1000000000s,
+						--sq21 1000000000s 1000000000s,
+						--sq31 1000000000s 1000000000s,
+						--sq12 0s 0s,
+						--sq22 1000000000s 1000000000s,
+						--sq32 1000000000s 1000000000s,
+						--sq13 1000000000s 1000000000s,
+						--sq23 1000000000s 1000000000s,
+						--sq33 1000000000s 1000000000s,
+						--st11 1000000000s 1000000000s allow-discrete,
+						--st21 1000000000s 1000000000s allow-discrete,
+						--st31 1000000000s 1000000000s allow-discrete,
+						--st12 0s 0s allow-discrete,
+						--st22 1000000000s 1000000000s allow-discrete,
+						--st32 1000000000s 1000000000s allow-discrete,
+						--st13 1000000000s 1000000000s allow-discrete,
+						--st23 1000000000s 1000000000s allow-discrete,
+						--st33 1000000000s 1000000000s allow-discrete;
+		
+			  	}
+			}
+		}
+	@container html (width: 10013px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq22) - calc(mod(var(--sq11) + var(--sq21) + var(--sq31) + var(--sq12) + var(--sq32) + var(--sq13) + var(--sq23) + var(--sq33) + 1,2))));
+					pointer-events: auto;
+					content: "O";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq22: 3;
+					--st22: "O";
+					transition:
+						--sq11 1000000000s 1000000000s,
+						--sq21 1000000000s 1000000000s,
+						--sq31 1000000000s 1000000000s,
+						--sq12 1000000000s 1000000000s,
+						--sq22 0s 0s,
+						--sq32 1000000000s 1000000000s,
+						--sq13 1000000000s 1000000000s,
+						--sq23 1000000000s 1000000000s,
+						--sq33 1000000000s 1000000000s,
+						--st11 1000000000s 1000000000s allow-discrete,
+						--st21 1000000000s 1000000000s allow-discrete,
+						--st31 1000000000s 1000000000s allow-discrete,
+						--st12 1000000000s 1000000000s allow-discrete,
+						--st22 0s 0s allow-discrete,
+						--st32 1000000000s 1000000000s allow-discrete,
+						--st13 1000000000s 1000000000s allow-discrete,
+						--st23 1000000000s 1000000000s allow-discrete,
+						--st33 1000000000s 1000000000s allow-discrete;
+		
+			  	}
+			}
+		}
+	@container html (width: 10014px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq32) - calc(mod(var(--sq11) + var(--sq21) + var(--sq31) + var(--sq12) + var(--sq22) + var(--sq13) + var(--sq23) + var(--sq33) + 1,2))));
+					pointer-events: auto;
+					content: "O";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq32: 3;
+					--st32: "O";
+					transition:
+						--sq11 1000000000s 1000000000s,
+						--sq21 1000000000s 1000000000s,
+						--sq31 1000000000s 1000000000s,
+						--sq12 1000000000s 1000000000s,
+						--sq22 1000000000s 1000000000s,
+						--sq32 0s 0s,
+						--sq13 1000000000s 1000000000s,
+						--sq23 1000000000s 1000000000s,
+						--sq33 1000000000s 1000000000s,
+						--st11 1000000000s 1000000000s allow-discrete,
+						--st21 1000000000s 1000000000s allow-discrete,
+						--st31 1000000000s 1000000000s allow-discrete,
+						--st12 1000000000s 1000000000s allow-discrete,
+						--st22 1000000000s 1000000000s allow-discrete,
+						--st32 0s 0s allow-discrete,
+						--st13 1000000000s 1000000000s allow-discrete,
+						--st23 1000000000s 1000000000s allow-discrete,
+						--st33 1000000000s 1000000000s allow-discrete;
+		
+			  	}
+			}
+		}
+	@container html (width: 10015px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq13) - calc(mod(var(--sq11) + var(--sq21) + var(--sq31) + var(--sq12) + var(--sq22) + var(--sq32) + var(--sq23) + var(--sq33) + 1,2))));
+					pointer-events: auto;
+					content: "O";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq13: 3;
+					--st13: "O";
+					transition:
+						--sq11 1000000000s 1000000000s,
+						--sq21 1000000000s 1000000000s,
+						--sq31 1000000000s 1000000000s,
+						--sq12 1000000000s 1000000000s,
+						--sq22 1000000000s 1000000000s,
+						--sq32 1000000000s 1000000000s,
+						--sq13 0s 0s,
+						--sq23 1000000000s 1000000000s,
+						--sq33 1000000000s 1000000000s,
+						--st11 1000000000s 1000000000s allow-discrete,
+						--st21 1000000000s 1000000000s allow-discrete,
+						--st31 1000000000s 1000000000s allow-discrete,
+						--st12 1000000000s 1000000000s allow-discrete,
+						--st22 1000000000s 1000000000s allow-discrete,
+						--st32 1000000000s 1000000000s allow-discrete,
+						--st13 0s 0s allow-discrete,
+						--st23 1000000000s 1000000000s allow-discrete,
+						--st33 1000000000s 1000000000s allow-discrete;
+		
+			  	}
+			}
+		}
+	@container html (width: 10016px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq23) - calc(mod(var(--sq11) + var(--sq21) + var(--sq31) + var(--sq12) + var(--sq22) + var(--sq32) + var(--sq13) + var(--sq33) + 1,2))));
+					pointer-events: auto;
+					content: "O";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq23: 3;
+					--st23: "O";
+					transition:
+						--sq11 1000000000s 1000000000s,
+						--sq21 1000000000s 1000000000s,
+						--sq31 1000000000s 1000000000s,
+						--sq12 1000000000s 1000000000s,
+						--sq22 1000000000s 1000000000s,
+						--sq32 1000000000s 1000000000s,
+						--sq13 1000000000s 1000000000s,
+						--sq23 0s 0s,
+						--sq33 1000000000s 1000000000s,
+						--st11 1000000000s 1000000000s allow-discrete,
+						--st21 1000000000s 1000000000s allow-discrete,
+						--st31 1000000000s 1000000000s allow-discrete,
+						--st12 1000000000s 1000000000s allow-discrete,
+						--st22 1000000000s 1000000000s allow-discrete,
+						--st32 1000000000s 1000000000s allow-discrete,
+						--st13 1000000000s 1000000000s allow-discrete,
+						--st23 0s 0s allow-discrete,
+						--st33 1000000000s 1000000000s allow-discrete;
+		
+			  	}
+			}
+		}
+	@container html (width: 10017px) {
+			body {
+				&::after {
+					scale: calc(max(0,1 - var(--sq33) - calc(mod(var(--sq11) + var(--sq21) + var(--sq31) + var(--sq12) + var(--sq22) + var(--sq32) + var(--sq13) + var(--sq23) + 1,2))));
+					pointer-events: auto;
+					content: "O";
+				}
+			  	&:hover:active {
+			  		background: orange;
+					--sq33: 3;
+					--st33: "O";
+					transition:
+						--sq11 1000000000s 1000000000s,
+						--sq21 1000000000s 1000000000s,
+						--sq31 1000000000s 1000000000s,
+						--sq12 1000000000s 1000000000s,
+						--sq22 1000000000s 1000000000s,
+						--sq32 1000000000s 1000000000s,
+						--sq13 1000000000s 1000000000s,
+						--sq23 1000000000s 1000000000s,
+						--sq33 0s 0s,
+						--st11 1000000000s 1000000000s allow-discrete,
+						--st21 1000000000s 1000000000s allow-discrete,
+						--st31 1000000000s 1000000000s allow-discrete,
+						--st12 1000000000s 1000000000s allow-discrete,
+						--st22 1000000000s 1000000000s allow-discrete,
+						--st32 1000000000s 1000000000s allow-discrete,
+						--st13 1000000000s 1000000000s allow-discrete,
+						--st23 1000000000s 1000000000s allow-discrete,
+						--st33 0s 0s allow-discrete;
+		
+			  	}
+			}
+		}
+	/* This style block is all there is ^_^ */
+</style>
