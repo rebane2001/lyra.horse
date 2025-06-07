@@ -20,11 +20,17 @@
     .underline {
         text-decoration: underline;
     }
-    .badge img {
+    .badge {
+      a {
+        display: inline-block;
+        line-height: 0;
+      }
+      img {
         image-rendering: pixelated;
-    }
-    .badge:hover img {
+      }
+      &:hover img {
         outline: solid 1px #000;
+      }
     }
   </style>
 </head>
@@ -81,10 +87,10 @@
   <hr/>
   <div id="badges">
     <!-- note: i've converted some of the gif badges into apngs instead so they take up less space -->
-    <span class="badge"><a href="https://lyra.horse/"><img loading="lazy" src="/badges/lyra.horse.png"/></a></span>
-    <span class="badge"><a href="https://maia.crimew.gay/"><img loading="lazy" src="/badges/maia.crimew.gay.png"/></a></span>
-    <span class="badge"><a href="https://oat.zone/"><img loading="lazy" src="/badges/oatzone.gif"/></a></span>
-    <span class="badge"><a href="https://lensdeer.neocities.org/"><img loading="lazy" src="/badges/lensdeer.neocities.org.png"/></a></span>
+    <span class="badge"><a href="https://lyra.horse/"><img loading="lazy" src="./badges/lyra.horse.png"/></a></span>
+    <span class="badge"><a href="https://maia.crimew.gay/"><img loading="lazy" src="./badges/maia.crimew.gay.png"/></a></span>
+    <span class="badge"><a href="https://oat.zone/"><img loading="lazy" src="./badges/oatzone.gif"/></a></span>
+    <span class="badge"><a href="https://lensdeer.neocities.org/"><img loading="lazy" src="./badges/lensdeer.neocities.org.png"/></a></span>
     <span class="badge"><a href="https://kibty.town/"><img loading="lazy" src="/badges/kibty.town.png"/></a></span>
     <span class="badge"><a href="https://www.brambleshadow4.net/"><img loading="lazy" src="/badges/brambleshadow4.net.png"/></a></span>
     <span class="badge"><a href="https://jkap.io/"><img loading="lazy" src="/badges/jkap.io.gif"/></a></span>
