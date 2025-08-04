@@ -328,14 +328,10 @@
     status.innerText = "";
   }
 
-  let imageMime = "image/jpeg";
-  let imageFilename = "arrupted.jpg";
+  let imageMime = "silly/file";
+  let imageFilename = "rawpeek.bin";
   async function loadImage(img) {
-    if (img?.name?.endsWith(".arrupt")) {
-      loadProj(img);
-      return;
-    }
-    imageFilename = img?.name ? `arrupted_${img.name}` : "arrupted.jpg"
+    imageFilename = img?.name || "unknown.bin"
     //imageMime = img?.type?.includes("image/") ? img.type : "image/jpeg";
     imageMime = img?.type ? img.type : "unknown";
     setStatus(img?.type ? `wowie, a ${img.type}!` : `let's go!`);
