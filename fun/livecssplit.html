@@ -93,14 +93,14 @@
 		run-split {
 			animation-play-state: paused;
 		};
-		run-split:first-child input {
+		run-split:first-child label {
 			display: block;
 		}
 		run-split span:last-child {
 			opacity: 0;
 		};
 	}
-	run-split:has(input:checked) + run-split input {
+	run-split:has(input:checked) + run-split label {
 		display: block;
 	}
 	run-split:has(input:checked) ~ run-split {
@@ -155,7 +155,7 @@
 		}
 	}
 	live-split:has(run-split:last-child input:checked) {
-		main-timer input {
+		main-timer label {
 			display: block;
 		}
 	}
