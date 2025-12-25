@@ -150,11 +150,14 @@
   			-webkit-text-fill-color: transparent;
   		}
 		input {
-			position: absolute;
-			inset: 0;
 			opacity: 0;
 			display: none;
-			cursor: pointer;
+			&::after {
+				content:"";
+				position: absolute;
+				inset: 0;
+				cursor: pointer;
+			}
 		}
 	}
 	live-split:has(run-split:last-child input:checked) {
