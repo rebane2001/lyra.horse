@@ -73,11 +73,14 @@
 			background:#171717;
 		}
 		input {
-			position: absolute;
-			inset: 0;
 			opacity: 0;
 			display: none;
-			cursor: pointer;
+			&::after {
+				content:"";
+				position: absolute;
+				inset: 0;
+				cursor: pointer;
+			}
 		}
 		&:has(input:checked) {
 			background: linear-gradient(#2D64D5 1px, #316FEC 1px, #163778);
