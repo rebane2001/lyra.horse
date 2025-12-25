@@ -9,15 +9,15 @@
 	<live-split>
 		<run-title contenteditable=plaintext-only spellcheck=false style="background:linear-gradient(#2A2A2A, #131313);height:33px;">Livesplit-style speedrun timer made in HTML and CSS (any%)</run-title>
 		<run-splits>
-			<run-split><span contenteditable=plaintext-only spellcheck=false>Create HTML file</span><input type=radio name=split><span></span></run-split>
-			<run-split><span contenteditable=plaintext-only spellcheck=false>Write the HTML</span><input type=radio name=split><span></span></run-split>
-			<run-split><span contenteditable=plaintext-only spellcheck=false>Write the CSS</span><input type=radio name=split><span></span></run-split>
-			<run-split><span contenteditable=plaintext-only spellcheck=false>Testing</span><input type=radio name=split><span></span></run-split>
-			<run-split><span contenteditable=plaintext-only spellcheck=false>Fix bugs</span><input type=radio name=split><span></span></run-split>
-			<run-split><span contenteditable=plaintext-only spellcheck=false>Publish with FTP</span><input type=radio name=split><span></span></run-split>
-			<run-split><span contenteditable=plaintext-only spellcheck=false>Finish</span><input type=radio name=split><span></span></run-split>
+			<run-split><span contenteditable=plaintext-only spellcheck=false>Create HTML file</span><label><input type=radio name=split></label><span></span></run-split>
+			<run-split><span contenteditable=plaintext-only spellcheck=false>Write the HTML</span><label><input type=radio name=split></label><span></span></run-split>
+			<run-split><span contenteditable=plaintext-only spellcheck=false>Write the CSS</span><label><input type=radio name=split></label><span></span></run-split>
+			<run-split><span contenteditable=plaintext-only spellcheck=false>Testing</span><label><input type=radio name=split></label><span></span></run-split>
+			<run-split><span contenteditable=plaintext-only spellcheck=false>Fix bugs</span><label><input type=radio name=split></label><span></span></run-split>
+			<run-split><span contenteditable=plaintext-only spellcheck=false>Publish with FTP</span><label><input type=radio name=split></label><span></span></run-split>
+			<run-split><span contenteditable=plaintext-only spellcheck=false>Finish</span><label><input type=radio name=split></label><span></span></run-split>
 		</run-splits>
-		<main-timer><span><span><input type=radio name=split></span></span></main-timer>
+		<main-timer><span><span><label><input type=radio name=split></label></span></span></main-timer>
 	</live-split>
 <style>
 	@property --time {
@@ -72,15 +72,12 @@
 		&:nth-child(even) {
 			background:#171717;
 		}
-		input {
+		label {
 			opacity: 0;
 			display: none;
-			&::after {
-				content:"";
-				position: absolute;
-				inset: 0;
-				cursor: pointer;
-			}
+			position: absolute;
+			inset: 0;
+			cursor: pointer;
 		}
 		&:has(input:checked) {
 			background: linear-gradient(#2D64D5 1px, #316FEC 1px, #163778);
@@ -149,15 +146,12 @@
 			-webkit-background-clip: text;
   			-webkit-text-fill-color: transparent;
   		}
-		input {
+		label {
 			opacity: 0;
 			display: none;
-			&,&::after {
-				content:"";
-				position: absolute;
-				inset: 0;
-				cursor: pointer;
-			}
+			position: absolute;
+			inset: 0;
+			cursor: pointer;
 		}
 	}
 	live-split:has(run-split:last-child input:checked) {
