@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>livecssplit</title>
+</head>
+<body>
+	<live-split>
+		<run-title contenteditable=plaintext-only spellcheck=false style="background:linear-gradient(#2A2A2A, #131313);height:33px;">Livesplit-style speedrun timer made in HTML and CSS (any%)</run-title>
+		<run-splits>
+			<run-split><span contenteditable=plaintext-only spellcheck=false>Create HTML file</span><input type=radio name=split><span></span></run-split>
+			<run-split><span contenteditable=plaintext-only spellcheck=false>Write the HTML</span><input type=radio name=split><span></span></run-split>
+			<run-split><span contenteditable=plaintext-only spellcheck=false>Write the CSS</span><input type=radio name=split><span></span></run-split>
+			<run-split><span contenteditable=plaintext-only spellcheck=false>Testing</span><input type=radio name=split><span></span></run-split>
+			<run-split><span contenteditable=plaintext-only spellcheck=false>Fix bugs</span><input type=radio name=split><span></span></run-split>
+			<run-split><span contenteditable=plaintext-only spellcheck=false>Publish with FTP</span><input type=radio name=split><span></span></run-split>
+			<run-split><span contenteditable=plaintext-only spellcheck=false>Finish</span><input type=radio name=split><span></span></run-split>
+		</run-splits>
+		<main-timer><span><span><input type=radio name=split></span></span></main-timer>
+	</live-split>
+<style>
+	@property --time {
+		syntax: '<integer>';
+  		inherits: true;
+  		initial-value: 0;
+	}
+	live-split {
+		--time: 0;
+		--timerA: #61E985;
+		--timerB: #18B441;
+		animation: timer 3600s linear 1;
+		display: flex;
+		width: 286px;
+		flex-direction: column;
+		position: relative;
+		border-top: 1px solid #1F1F1F;
+		color: #FFF;
+		font-family: sans-serif;
+		font-size: 14px;
+		text-shadow: 2px 1px 0.5px #0008;
+		* {
+			box-sizing: border-box;
+		}
+	}
+	run-title {
+		display: block;
+		padding: 2px 4px;
+	}
+	run-splits {
+		display: flex;
+		flex-direction: column;
+		background: #232323;
+		gap: 1px;
+	}
+	run-split {
+		--time: 0;
+		animation: timer 3600s linear 1;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		height: 24px;
+		background: #0F0F0F;
+		padding: 0 4px;
+		span:last-child::after {
+			--m: round(down, var(--time) / 100 / 60);
+			--s: mod(round(down, var(--time) / 100), 60);
+			counter-reset: m var(--m) s var(--s);
+			content: counter(m, decimal-leading-zero) ":" counter(s, decimal-leading-zero);
+			font-weight: 600;
+		}
+		&:nth-child(even) {
+			background:#171717;
+		}
+		input {
+			position: absolute;
+			inset: 0;
+			opacity: 0;
+			display: none;
+			cursor: pointer;
+		}
+		&:has(input:checked) {
+			background: linear-gradient(#2D64D5 1px, #316FEC 1px, #163778);
+		}
+	}
+	run-split:has(~ run-split input:checked) {
+		animation-play-state: paused;
+	}
+	live-split:not(:has(input:checked)) {
+		animation-play-state: paused;
+		--timerA: #E0E0E0;
+		--timerB: #A7A7A7;
+		run-split {
+			animation-play-state: paused;
+		};
+		run-split:first-child input {
+			display: block;
+		}
+		run-split span:last-child {
+			opacity: 0;
+		};
+	}
+	run-split:has(input:checked) + run-split input {
+		display: block;
+	}
+	run-split:has(input:checked) ~ run-split {
+		span:last-child {
+			opacity: 0;
+		}
+	}
+	live-split:has(main-timer input:checked) {
+		animation-play-state: paused;
+		--timerA: #E0E0E0;
+		--timerB: #A7A7A7;
+		run-split {
+			animation-play-state: paused;
+		};
+	}
+	main-timer {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		height: 58px;
+		background: #0F0F0F;
+		padding: 0 4px;
+		& > span {
+			font-size: 56px;
+			font-weight: 600;
+			--m: round(down, var(--time) / 100 / 60);
+			--s: mod(round(down, var(--time) / 100), 60);
+			--c: mod(round(down, var(--time)), 100);
+			counter-reset: m var(--m) s var(--s) c var(--c);
+			&::before {
+				content: counter(m, decimal-leading-zero) ":" counter(s, decimal-leading-zero);
+			}
+			& > span {
+				font-size: 75%;
+				&::before {
+					content: "." counter(c, decimal-leading-zero);
+					display: inline-block;
+                	width: 2.5ch;
+				}
+			}
+			text-shadow: none;
+  			background: -webkit-linear-gradient(var(--timerA), var(--timerB));
+			-webkit-background-clip: text;
+  			-webkit-text-fill-color: transparent;
+  		}
+		input {
+			position: absolute;
+			inset: 0;
+			opacity: 0;
+			display: none;
+			cursor: pointer;
+		}
+	}
+	live-split:has(run-split:last-child input:checked) {
+		main-timer input {
+			display: block;
+		}
+	}
+	@keyframes timer {
+		from {
+			--time: 0;
+		}
+		to {
+			--time: 360000;
+		}
+	}
+</style>
+<a href="https://lyra.horse/fun/livecssplit.html">https://lyra.horse/fun/livecssplit.html</a>
+</body>
+</html>
