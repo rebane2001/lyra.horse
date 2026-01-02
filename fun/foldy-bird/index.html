@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 	<title>Foldy Bird</title>
 	<style>
 		@font-face {
@@ -54,12 +54,12 @@
 		game-ui {
 			position: fixed;
 			font-size: 6vh;
-			left: 50%;
+			left: 0;
 			top: 50%;
 			background: #E1D197;
 			padding: 3vh 5vh 5vh;
 			border: 1vh solid #1F1F08;
-			translate: -50% -50%;
+			translate: calc(50vw - 50%) -50%;
 			z-index: 2;
 			text-align: center;
 			line-height: 1;
@@ -81,8 +81,9 @@
 <!-- textures and game created by rebane2001 -->
 <game-ui>
 	<h1 style="font-size:10vh">Foldy Bird</h1>
-	<p style="font-size:50%;margin:10px;max-width:50vh">by rebane2001</p>
-	<p id="tutorial" style="font-size:40%;margin:10px;margin-top:30px;max-width:50vh">This game can only be played on foldable devices. At the moment, only Chrome supports the required API.</p>
+	<p style="font-size:50%;margin:10px;max-width:50vh">by <a href="https://lyra.horse" style="color:darkblue">rebane2001</a></p>
+	<p style="font-size:40%;margin:10px;margin-top:30px;max-width:50vh">This game can only be played on foldable devices. At the moment, only Chrome supports the required API.</p>
+	<p style="font-size:40%;margin:10px;margin-top:30px;max-width:50vh">Play this game at your own risk and only on your own devices.</p>
 	<p>Fold to start!</p>
 </game-ui>
 <score-counter>0</score-counter>
