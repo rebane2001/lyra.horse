@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Foldy Bird</title>
+	<style>
+		@font-face {
+			font-family: "Kenney Mini Square";
+			src: url("Kenney Mini Square.ttf") format("truetype");
+		}
+		html, body {
+			background: #70C5CE;
+			font-family: "Kenney Mini Square";
+		}
+		* {
+			image-rendering: pixelated;
+		}
+		the-floor {
+			position: fixed;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			height: 10vh;
+			background: url(ground.png) repeat-x, #E1D197;
+			background-size: 4vh 4vh;
+			animation: floor calc(1 / 5.25 * 1s) linear infinite;
+			z-index: 1;
+		}
+		the-birb {
+			left: calc(50% - 4.5vh);
+			display: block;
+			width: 9vh;
+			height: 5.5vh;
+			background: url(birb.png) 0 0 / cover;
+			position: fixed;
+		}
+		a-pipe {
+			position: fixed;
+			top: 0;
+			width: 13vh;
+			height: 80vh;
+			background: url(pipe.png) 0 0 / cover;
+		}
+		score-counter {
+			position: fixed;
+			font-size: 7vh;
+			color: #FFF;
+			text-shadow: 0.5vh 0.5vh #000, -0.5vh 0.5vh #000, -0.5vh -0.5vh #000, 0.5vh -0.5vh #000, 0vh 0.5vh #000, 0vh -0.5vh #000, -0.5vh 0vh #000, 0.5vh 0vh #000;
+			left: 50%;
+			translate: -50% 0;
+			z-index: 2;
+		}
+		game-ui {
+			position: fixed;
+			font-size: 6vh;
+			left: 50%;
+			top: 50%;
+			background: #E1D197;
+			padding: 3vh 5vh 5vh;
+			border: 1vh solid #1F1F08;
+			translate: -50% -50%;
+			z-index: 2;
+			text-align: center;
+			line-height: 1;
+			h1, p {
+				margin: 0;
+			}
+		}
+		@keyframes floor {
+			from {
+				background-position: 4vh 0vh;
+			}
+			to {
+				background-position: 0vh 0vh;
+			}
+		}
+	</style>
+</head>
+<body>
+<!-- textures and game created by rebane2001 -->
+<game-ui>
+	<h1 style="font-size:10vh">Foldy Bird</h1>
+	<p style="font-size:50%;margin:10px;max-width:50vh">by rebane2001</p>
+	<p id="tutorial" style="font-size:40%;margin:10px;margin-top:30px;max-width:50vh">This game can only be played on foldable devices. At the moment, only Chrome supports the required API.</p>
+	<p>Fold to start!</p>
+</game-ui>
+<score-counter>0</score-counter>
+<the-birb></the-birb>
+<the-floor></the-floor>
+<script>
+	let birbVel = 0;
+	let birbPos = 50;
+	navigator.devicePosture.addEventListener("change", () => {
+		if (navigator.devicePosture.type == "continuous") flap();
+	});
+
+	function flap() {
+		if (gameIsRunning) {
+			birbVel = 1;
+		} else {
+			startGame();
+		}
+	}
+	const birb = document.querySelector("the-birb");
+	const floor = document.querySelector("the-floor");
+	const gui = document.querySelector("game-ui");
+	const counter = document.querySelector("score-counter");
+	let gameIsRunning = false;
+	let score = 0;
+
+	function startGame() {
+		gameIsRunning = true;
+		gui.style.display = "none";
+		birbVel = 1;
+		birbPos = 50;
+		score = 0;
+		document.querySelectorAll("a-pipe").forEach(e => e.remove());
+		document.querySelectorAll("game-ui p:not(:last-child)").forEach(e => e.remove());
+		document.querySelector("game-ui p").innerText = "Fold to retry";
+		document.querySelector("game-ui h1").innerText = "Game Over";
+	}
+
+	function addPipe() {
+		const pipeA = document.createElement("a-pipe");
+		const pipeB = document.createElement("a-pipe");
+		const pipeTop = Math.random()*50 + 30;
+		pipeA.style.left = `calc(${window.innerWidth}px + 40vh)`;
+		pipeB.style.left = `calc(${window.innerWidth}px + 40vh)`;
+		pipeA.style.top = `calc(${pipeTop}vh)`;
+		pipeB.style.top = `calc(${pipeTop}vh - 80vh - 25vh)`;
+		pipeB.style.transform = `scaleY(-1)`;
+		pipeA.dataset.top = `yes`;
+		document.body.appendChild(pipeA);
+		document.body.appendChild(pipeB);
+	}
+	function tickPipes(pipes, birbBounds) {
+		const vh = window.innerHeight/100;
+		pipes.forEach(pipe => {
+			const pipeBounds = pipe.getBoundingClientRect();
+			if (pipeBounds.left < birbBounds.right - vh && pipeBounds.right > birbBounds.left + vh * 4) {
+				if (pipeBounds.bottom > birbBounds.top + vh && pipeBounds.top < birbBounds.bottom - vh)
+					lose();
+			}
+			if (!pipe.dataset.coin && pipe.dataset.top && pipeBounds.right < birbBounds.right) {
+				pipe.dataset.coin = "yes";
+				score += 1;
+			}
+			if (pipeBounds.right < 0) {
+				pipe.remove();
+				return;
+			}
+			pipe.style.left = `calc(${getComputedStyle(pipe).left} - 0.35vh)`;
+		});
+	}
+	function lose() {
+		gameIsRunning = false;
+		gui.style.display = "block";
+	}
+	function positionBirb() {
+		birb.style.bottom = `${birbPos}vh`;
+		birb.style.rotate = `${Math.max(-birbVel*30, -15)}deg`;
+	}
+	function loop() {
+		if (!gameIsRunning) {
+			positionBirb();
+			return;
+		}
+		birbPos = birbPos + birbVel;
+		birbVel -= 0.04;
+		positionBirb();
+		const birbBounds = birb.getBoundingClientRect();
+		const floorBounds = floor.getBoundingClientRect();
+		if (birbBounds.bottom >= floorBounds.top) {
+			lose();
+		}
+		const pipes = [...document.querySelectorAll("a-pipe")];
+		if (!pipes.length || pipes.at(-1).getBoundingClientRect().left < window.innerWidth) {
+			addPipe();
+		}
+		tickPipes(pipes, birbBounds);
+		counter.innerText = score;
+	}
+	setInterval(loop,1000/60);
+</script>
+</body>
+</html>
