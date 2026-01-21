@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+  <title>Charchery</title>
+  <meta property="og:url" content="https://lyra.horse/fun/charchery/">
+  <meta property="og:title" content="Charchery">
+  <meta name="description" content="Phone charger archery">
+  <meta property="og:description" content="Phone charger archery">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="website">
+  <meta content="#FFD891" name="theme-color" />
+  <style>
+    html, body, #swag, #ui {
+      width:100%;
+      height:100%;
+      max-height: 100%;
+      max-width: 100%;
+      margin:0;
+      overflow: clip;
+      font-family: serif;
+    }
+    #ui {
+      position:absolute;
+      top:0;
+      left:0;
+      opacity:1;
+      transition: opacity 1s 0.1s;
+      @starting-style {
+        opacity:0;
+      }
+    }
+    message-box {
+      display: none;
+      width: fit-content;
+      padding: 1vh;
+      font-size: 4vh;
+      background:#ffd891;
+      color:#3b2300;
+      border: 1vh solid;
+      position: absolute;
+      top: 22vh;
+      translate: calc(50vw - 50%) 0;
+      box-shadow: 2px 2px 4px #3b2300aa;
+      text-align: center;
+    }
+    title-logo {
+      display: flex;
+      flex-direction: column;
+      padding: 1vh;
+      font-size: 3vh;
+      background:#ffd891;
+      color:#3b2300;
+      border: 1vh solid;
+      position: absolute;
+      inset: 0 0 auto;
+      box-shadow: 2px 2px 4px #3b2300aa;
+      text-align: center;
+    }
+    #score-display {
+      display: none;
+      width: fit-content;
+      position: absolute;
+      top: 5vh;
+      translate: calc(50vw - 50%) 0;
+      font-size: 4vh;
+      color: yellow;
+      text-shadow: 0.13vh 0.13vh #ff8d00;
+      user-select: none;
+      pointer-events: none;
+    }
+    combo-counter {
+      display: flex;
+      width: fit-content;
+      position: absolute;
+      top: 0;
+      transform: translateX(calc(50vw - 50%));
+      font-size: 5vh;
+      color: yellow;
+      text-shadow: 0.13vh 0.13vh #ff8d00;
+      user-select: none;
+      opacity: 0;
+      transition: 1s 2s opacity;
+      @starting-style {
+        opacity:1;
+      }
+    }
+    #swag {
+      perspective: 10000px;
+      transform-style: preserve-3d;
+      transform-origin: 50% 150%;
+      perspective-origin: 50% 150%;
+      * {
+        transform-style: preserve-3d;
+      }
+      overflow: visible;
+    }
+    stick-person {
+      position: absolute;
+      top: calc(100% + 47vh - 8vh);
+      left: 50%;
+      display: block;
+      width: 0;
+      height: 0;
+      transform-origin: 50% calc(100% + 8vh);
+      scale: 0.5;
+      stick-head, stick-body, stick-arm, stick-leg {
+        display: block;
+        position: absolute;
+        background: #f4b900;
+        opacity:1;
+        transition: opacity 1s;
+        @starting-style {
+          opacity: 0;
+        }
+      }
+      stick-head {
+        width:8vh;
+        height:8vh;
+        border-radius: 100%;
+        translate: -50% -17.5vh;
+      }
+      stick-body {
+        width:1vh;
+        height:12vh;
+        translate: -50% -12vh;
+      }
+      stick-arm {
+        width:1vh;
+        height:8vh;
+        transform-origin: 50% 0%;
+        translate: -50% -8vh;
+        border-radius: 1vh;
+        rotate: 45deg;
+        &[r] {
+          rotate: -45deg;
+        }
+      }
+      stick-leg {
+        width:1vh;
+        height:8vh;
+        transform-origin: 50% 0%;
+        translate: -50% 0;
+        border-radius: 1vh;
+        rotate: 25deg;
+        animation: legMove ease-in-out 0.4s infinite alternate;
+        &[r] {
+          rotate: -25deg;
+          animation: legMove ease-in-out 0.4s -0.4s infinite alternate;
+        }
+      }
+      &[data-dead] stick-leg, &[data-tutorial] stick-leg {
+        &, &[r] {
+          animation: none;
+        }
+      }
+    }
+    the-arrow {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      background: url(arrow.png) 0 0 / cover;
+      display: block;
+      width: 1.6vh;
+      height: 16.8vh;
+      transform-origin: 50% calc(100% + 47vh);
+    }
+    the-bow {
+      position: absolute;
+      display: block;
+      background: url(bow1.png) 0 0 / cover;
+      height: 13.2vh;
+      width: 37vh;
+      bottom:0;
+      left:50%;
+      translate: -50% 0;
+      transform-origin: 50% calc(100% + 47vh);
+    }
+    #swag:has(the-arrow:not([data-shot])) the-bow {
+      background: url(bow2.png) 0 0 / cover;
+    }
+    @keyframes legMove {
+      0% {
+        transform: rotateX(10deg);
+      }
+      100% {
+        transform: rotateX(-10deg);
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- textures and game created by rebane2001 -->
+<div id="swag">
+  <div style="background:url(grass.png); background-size: 20vh 20vh; transform: translateZ(-10vh); position:absolute; width: 500vh; height: 300vh; position:absolute;bottom:10vh;left:50%; translate: -50% 0"></div>
+  <div style="background:url(rock.png); background-size: 20vh 20vh; transform: translateZ(-10vh) rotateX(45deg); transform-origin: 50% 0%; position:absolute; width: 500vh; height: 14vh; position:absolute;top:calc(100% - 10vh);left:50%; translate: -50% 0"></div>
+  <div style="background:url(rock.png); background-size: 20vh 20vh; transform: translateZ(calc(-10vh + sqrt(2)/2*14vh)); transform-origin: 50% 0%; position:absolute; width: 500vh; height: 300vh; position:absolute;top:calc(100% - 10vh + sqrt(2)/2*14vh);left:50%; translate: -50% 0"></div>
+  <!-- <img src="building-temp.png"> -->
+  <!-- <img src="building-temp.png" style="transform:translateZ(100px);"> -->
+    <!--   <stick-person data-distance=150 data-angle=0 style="transform: rotateX(-10deg)">
+    <stick-head></stick-head>
+    <stick-body></stick-body>
+    <stick-arm l></stick-arm>
+    <stick-arm r></stick-arm>
+    <stick-leg l></stick-leg>
+    <stick-leg r></stick-leg>
+  </stick-person> -->
+  <the-bow></the-bow>
+  <!-- <the-arrow data-angle=0 data-distance=0></the-arrow> -->
+</div>
+<div id="ui">
+  <title-logo>
+  <h1 style="margin:0;font-size:5vh;text-align:center">Charchery</h1>
+  <p style="margin:0">a game by <a style="color:#a30078" href="https://lyra.horse">rebane2001</a></p>
+  <p style="margin:0.75vh 0 0;font-size:1.7vh">You'll need an Android phone with Chrome and a phone charger. This game could damage your charging port, play at your own risk.</p>
+</title-logo>
+  <message-box id="tutorial-orientation">Can't detect your phone's orientation<br>(this is required to play the game)</message-box>
+  <message-box id="tutorial-lookdown">Look down</message-box>
+  <message-box id="tutorial-rotate">Find the stick<br>(rotate your phone)</message-box>
+  <message-box id="tutorial-plugin">Plug in your phone<br>to load an arrow</message-box>
+  <message-box id="tutorial-shoot">Unplug your phone<br>to shoot the arrow</message-box>
+  <message-box id="game-over">Game over!<br>(tap to restart)</message-box>
+  <div id="score-display">Score: 1</div>
+  <noscript><p style="color:#FFF;font-size:4vh;position:absolute;z-index:9;">You must enable JavaScript to play this game :p</p></noscript>
+</div>
+<script>
+  let gba = [0,0,0];
+function handleOrientation(event) {
+  //swag.style.transform = `rotateY(${-event.gamma}deg) rotateX(${event.beta}deg) rotateZ(${event.alpha}deg)`;
+  //swag.style.transform = `rotateY(${-event.gamma}deg) rotateX(${event.beta}deg) rotateZ(${event.alpha}deg)`;
+  gba = [Math.max(-45, Math.min(45, -event.gamma)), Math.max(-45, Math.min(45, event.beta)), event.alpha];
+  swag.style.transform = `rotateY(clamp(-45deg, ${-event.gamma}deg, 45deg)) rotateX(clamp(-45deg, ${event.beta}deg, 45deg)) rotateZ(${event.alpha}deg) rotateZ(-90deg)`;
+  document.querySelector("the-bow").style.transform = `rotateZ(${-event.alpha}deg) rotateZ(90deg)`;
+  // document.querySelector("the-arrow").style.transform = `rotateZ(${-event.alpha}deg) rotateZ(90deg)`;
+  const currentArrow = document.querySelector("the-arrow:not([data-shot])");
+  if (currentArrow)
+    currentArrow.dataset.angle = -(-event.alpha+90);
+}
+
+let score = 0;
+
+const tutorialOrientation = document.getElementById("tutorial-orientation");
+const tutorialLookdown = document.getElementById("tutorial-lookdown");
+const tutorialRotate = document.getElementById("tutorial-rotate");
+const tutorialPlugin = document.getElementById("tutorial-plugin");
+const tutorialShoot = document.getElementById("tutorial-shoot");
+const scoreDisplay = document.getElementById("score-display");
+const gameOverMsg = document.getElementById("game-over");
+const titleLogo = document.querySelector("title-logo");
+function tickUi() {
+  let currentTutorial = null;
+  if (gameState == 0) {
+    const currentArrow = document.querySelector("the-arrow:not([data-shot])");
+    const anyArrow = document.querySelector("the-arrow");
+    const currentAngle = ((-(-gba[2]+90) + 360) % 360);
+    if (currentArrow && anyArrow)
+      currentTutorial = tutorialShoot;
+    if (!anyArrow)
+      currentTutorial = tutorialPlugin;
+    if (Math.abs(((currentAngle + 180) % 360) - 180) > 10)
+      currentTutorial = tutorialRotate;
+    if (Math.abs(gba[0]) > 15 || Math.abs(gba[1]) > 15)
+      currentTutorial = tutorialLookdown;
+    if ((gba.every(e => e == 0) || (gba[0] == -0 && gba[1] == 0 && gba[2] == null)))
+      currentTutorial = tutorialOrientation;
+  }
+  if (currentTutorial != tutorialOrientation)
+    tutorialOrientation.style.display = "none";
+  if (currentTutorial != tutorialLookdown)
+    tutorialLookdown.style.display = "none";
+  if (currentTutorial != tutorialRotate)
+    tutorialRotate.style.display = "none";
+  if (currentTutorial != tutorialPlugin)
+    tutorialPlugin.style.display = "none";
+  if (currentTutorial != tutorialShoot)
+    tutorialShoot.style.display = "none";
+  if (currentTutorial)
+    currentTutorial.style.display = "flex";
+  scoreDisplay.style.display = gameState == 0 ? "none" : "flex";
+  titleLogo.style.display = gameState == 0 ? "flex" : "none";
+  gameOverMsg.style.display = gameState == 2 ? "flex" : "none";
+}
+
+// https://stackoverflow.com/a/17411276
+function rotate(cx, cy, x, y, angle) {
+    var radians = (Math.PI / 180) * angle,
+        cos = Math.cos(radians),
+        sin = Math.sin(radians),
+        nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
+        ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+    return [nx, ny];
+}
+
+function gameOver() {
+  gameState = 2;
+}
+
+function tickStick(stick, timeDelta) {
+  const stickAngle = parseFloat(stick.dataset.angle);
+  let stickDist = parseFloat(stick.dataset.distance);
+  if (!stick.dataset.dead && gameState == 1)
+    stickDist -= timeDelta/300;
+  if (stickDist < 50)
+    gameOver();
+  const newPos = rotate(0, 0, 0, -stickDist, stickAngle);
+  stick.style.translate = `${newPos[0]}vh ${newPos[1]}vh`;
+  stick.dataset.distance = stickDist;
+  if (stick.dataset.dead) {
+    let stickDead = parseFloat(stick.dataset.dead);
+    stickDead += timeDelta;
+    stick.dataset.dead = stickDead;
+    stick.querySelectorAll("*").forEach(e => {
+      //e.style.backgroundColor = `rgb(from color-mix(in lch, #f4b900, rgb(255 185 0) ${Math.max(0,100 - stickDead/2.5)}%), r g b / ${Math.max(0,100 - stickDead*0.05)}%)`;
+      //e.style.backgroundColor = `color-mix(in lch, #f4b900, rgb(255 185 0) ${Math.max(0,100 - stickDead/2.5)}%)`;
+      //e.style.backgroundColor = `color-mix(in lch, #f4b900, #FF00FF)`;
+      // e.style.backgroundColor = `rgb(from color-mix(in lch, #f4b900, #F0F ${Math.max(0,100 - stickDead/2.5)}%), r g b / ${Math.max(0,100 - stickDead*0.05)}%)`;
+      e.style.backgroundColor = `rgb(from color-mix(in lch, #A40, #F07 ${Math.max(0,100 - stickDead/10)}%) r g b / ${Math.max(0,100 - stickDead*0.05)}%)`;
+    });
+    if (stickDead > 2000)
+      return stick.remove();
+    setStickRot(stick, Math.min(0,-90 + stickDead), stickAngle);
+  } else {
+    setStickRot(stick, -90, stickAngle);
+  }
+}
+
+function tickArrow(arrow, timeDelta) {
+  const arrowAngle = ((parseFloat(arrow.dataset.angle)+360) % 360);
+  let arrowDist = parseFloat(arrow.dataset.distance);
+  if (arrow.dataset.shot) {
+    arrowDist += timeDelta*0.4;
+    document.querySelectorAll("stick-person:not([data-dead])").forEach(stick => {
+      const stickAngle = parseFloat(stick.dataset.angle);
+      if ((Math.abs(stickAngle - arrowAngle) < 2 || Math.abs(((stickAngle+180)%360) - ((arrowAngle+180)%360)) < 2 ) && parseFloat(stick.dataset.distance) - 50 < arrowDist) {
+        if (gameState == 0) {
+          gameStart = Date.now();
+          gameState = 1;
+          score = 0;
+        }
+        let currentCombo = parseInt(arrow.dataset?.combo ?? 0);
+        if (currentCombo == 1) {
+          const comboCounter = document.createElement("combo-counter");
+          comboCounter.dataset.arrowId = arrow.dataset.arrowId;
+          comboCounter.innerText = `${currentCombo}x combo`;
+          comboCounter.style.translate = `${Math.random()*50-25}vw ${Math.random()*80+10}vh`;
+          comboCounter.style.rotate = `${Math.random()*20-10}deg`;
+          document.querySelector("#ui").appendChild(comboCounter);
+          setTimeout(()=>comboCounter.remove(),6000);
+        } else if (currentCombo > 1) {
+          const comboCounter = document.querySelector(`combo-counter[data-arrow-id="${arrow.dataset.arrowId}"]`);
+          if (comboCounter) {
+            comboCounter.style.transition = "none";
+            comboCounter.style.opacity = "1";
+            requestAnimationFrame(()=>{
+              comboCounter.style.transition = "1s 2s opacity";
+              comboCounter.style.opacity = "0";
+            });
+            comboCounter.innerText = `${currentCombo}x combo`;
+          }
+        }
+        score += 1 + currentCombo;
+        scoreDisplay.innerText = `Score: ${score}`;
+        arrow.dataset.combo = currentCombo + 1;
+        spawnStick();
+        stick.dataset.dead = 1;
+      }
+    });
+    if (arrowDist >= 200) {
+      arrow.remove();
+      return;
+    }
+  }
+  //arrowDist -= timeDelta/30;
+  // if (arrowDist < 400) die
+  const newPos = rotate(0, 0, 0, -arrowDist, arrowAngle);
+  arrow.style.translate = `calc(${newPos[0]}vh - 50%) ${newPos[1]}vh`;
+  arrow.style.transform = `rotateZ(${-arrowAngle}deg)`;
+  arrow.dataset.distance = arrowDist;
+}
+
+let gameState = 0;
+let lastTimestamp = 0;
+let lastDate = 0;
+let gameStart = Date.now();
+function animate(timestamp) {
+  tickUi();
+  if (lastDate > gameStart && gameState == 1) {
+    if (Math.floor((lastDate-gameStart)/10000) < Math.floor((Date.now()-gameStart)/10000))
+      spawnStick();
+  }
+  lastDate = Date.now();
+  
+  timeDelta = Math.min(100, timestamp - lastTimestamp);
+  lastTimestamp = timestamp;
+
+  document.querySelectorAll("the-arrow").forEach(arrow => tickArrow(arrow, timeDelta));
+  document.querySelectorAll("stick-person").forEach(stick => tickStick(stick, timeDelta));
+  //setStickRot(document.querySelector("stick-person"), -90);
+  requestAnimationFrame(animate);
+}
+
+
+//setStickRot(document.querySelector("stick-person"), -90);
+
+function spawnStick(firstStick) {
+  const newStick = document.createElement("stick-person");
+  newStick.dataset.angle = firstStick ? 0 : (Math.random()*90 - 45 + 360) % 360;
+  newStick.dataset.distance = firstStick ? 90 : 170;
+  if (firstStick)
+    newStick.dataset.tutorial = true;
+
+  let tmp;
+  newStick.appendChild(document.createElement("stick-head"));
+  newStick.appendChild(document.createElement("stick-body"));
+  tmp = document.createElement("stick-arm");
+  tmp.setAttribute("l","");
+  newStick.appendChild(tmp);
+  tmp = document.createElement("stick-arm");
+  tmp.setAttribute("r","");
+  newStick.appendChild(tmp);
+  tmp = document.createElement("stick-leg");
+  tmp.setAttribute("l","");
+  newStick.appendChild(tmp);
+  tmp = document.createElement("stick-leg");
+  tmp.setAttribute("r","");
+  newStick.appendChild(tmp);
+  document.querySelector("#swag").appendChild(newStick);
+}
+
+function setStickRot(stickPerson, rot, stickAngle) {
+  stickPerson.style.transform = `translateZ(-10vh) rotateZ(${-stickAngle}deg) rotateX(${rot}deg)`;
+  stickPerson.querySelector("stick-head").style.transform = `rotateX(${-rot}deg)`;
+  stickPerson.querySelectorAll("stick-arm").forEach(e => e.style.transform = `rotateY(${-rot * (e.attributes["r"] ? 1 : -1)}deg) rotateZ(${-rot * (e.attributes["l"] ? 1 : -1) * 0.05}deg)`);
+}
+
+let lastBatteryState = false;
+function setupBattery() {
+  navigator.getBattery().then((battery) => {
+    action(battery.charging);
+    battery.addEventListener("chargingchange", () => {
+      lastBatteryState = battery.charging;
+      action(battery.charging);
+      console.log(`Battery charging? ${battery.charging ? "Yes" : "No"}`);
+    });
+    battery.addEventListener("levelchange", () => {
+      console.log(`Battery level: ${battery.level * 100}%`);
+    });
+  });
+}
+
+  function action(isCharging) {
+    const currentArrow = document.querySelector("the-arrow:not([data-shot])");
+    if (currentArrow) {
+      if (!isCharging)
+        currentArrow.dataset.shot = true;
+    }
+    else if (isCharging || isCharging == undefined) {
+      const newArrow = document.createElement("the-arrow");
+      newArrow.dataset.arrowId = Math.random().toString(36).slice(2);
+      newArrow.dataset.angle = 0;
+      newArrow.dataset.distance = 0;
+      document.querySelector("#swag").appendChild(newArrow);
+    }
+  }
+
+setupBattery();
+spawnStick(true);
+
+function restartGame() {
+  document.querySelectorAll("the-arrow").forEach(e => e.remove());
+  document.querySelectorAll("stick-person").forEach(e => e.remove());
+  spawnStick(true);
+  score = 0;
+  gameState = 0;
+  action(lastBatteryState);
+}
+
+window.onclick = () => {
+  if (gameState == 2)
+    restartGame();
+  // else
+  //  action();
+};
+
+window.addEventListener("deviceorientation", handleOrientation);
+requestAnimationFrame(animate);
+</script>
