@@ -342,7 +342,7 @@ function tickArrow(arrow, timeDelta) {
         if (currentCombo == 1) {
           const comboCounter = document.createElement("combo-counter");
           comboCounter.dataset.arrowId = arrow.dataset.arrowId;
-          comboCounter.innerText = `${currentCombo}x combo`;
+          comboCounter.innerText = `${currentCombo+1}x combo`;
           comboCounter.style.translate = `${Math.random()*50-25}vw ${Math.random()*80+10}vh`;
           comboCounter.style.rotate = `${Math.random()*20-10}deg`;
           document.querySelector("#ui").appendChild(comboCounter);
@@ -356,7 +356,7 @@ function tickArrow(arrow, timeDelta) {
               comboCounter.style.transition = "1s 2s opacity";
               comboCounter.style.opacity = "0";
             });
-            comboCounter.innerText = `${currentCombo}x combo`;
+            comboCounter.innerText = `${currentCombo+1}x combo`;
           }
         }
         score += 1 + currentCombo;
