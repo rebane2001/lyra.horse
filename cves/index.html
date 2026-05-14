@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CVEs and other findings - Lyra Rebane</title>
+	<style>
+		.vulnerabilitites {
+			table {
+				text-align: left;
+				th:nth-child(1) {
+					width: 8em;
+				}
+				th:nth-child(2) {
+					width: 5em;
+				}
+			}
+		}
+	</style>
+</head>
+<body>
+<h2>Found vulnerabilitites</h2>
+<p>Note: This list is still WIP.</p>
+<div class="vulnerabilitites">
+  <h3>2026</h3>
+  <table>
+    <thead>
+      <tr><th>Target</th><th>Bounty</th><th>Info</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Google Chrome</th><td>$TBD</td><td>TBD (<a href="https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop_10.html#:~:text=CVE%2D2026%2DTBD">CVE-2026-TBD</a>, <a href="https://issues.chromium.org/issues/474670215">XXXX</a>)</td></tr>
+      <tr><th>Google Docs</th><td>$18000</td><td>TBD</td></tr>
+      <tr><th>YouTube</th><td>$18000</td><td>TBD</td></tr>
+      <tr><th>Google Chrome</th><td>$2000</td><td>Side-channel information leakage in Navigation (<a href="https://chromereleases.googleblog.com/2026/04/stable-channel-update-for-desktop.html#:~:text=CVE%2D2026%2D5876">CVE-2026-5876</a>, <a href="https://issues.chromium.org/issues/41485206">41485206</a>)</td></tr>
+      <tr><th>Google Chrome</th><td>$4000</td><td>Policy bypass in Blink (<a href="https://chromereleases.googleblog.com/2026/04/stable-channel-update-for-desktop.html#:~:text=CVE%2D2026%2D5875">CVE-2026-5875</a>, <a href="https://issues.chromium.org/issues/430198264">430198264</a>)</td></tr>
+      <tr><th>Google Chrome</th><td>$1000</td><td>TBD (<a href="https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop_10.html#:~:text=CVE%2D2026%2DTBD">CVE-2026-TBD</a>, <a href="https://issues.chromium.org/issues/474670215">XXXX</a>)</td></tr>
+      <tr><th>Fastmail</th><td>$1000</td><td>CSS sanitisation bypass (<a href="https://www.fastmail.com/bug-bounty/">HoF</a>)</td></tr>
+      <tr><th>Proton Mail</th><td>€200</td><td>CSS sanitization bypass (<a href="https://proton.me/blog/protonmail-security-contributors#:~:text=Lyra%20Rebane">HoF</a>)</td></tr>
+      <tr><th>Zone Webmail</th><td>€600</td><td>Multiple vulnerabilities</td></tr>
+      <tr><th>Google Chrome</th><td>$1000</td><td>Use after free in Animation (<a href="https://chromereleases.googleblog.com/2026/03/stable-channel-update-for-desktop_10.html#:~:text=CVE%2D2026%2D3941">CVE-2026-3941</a>, <a href="https://issues.chromium.org/issues/474670215">474670215</a>)</td></tr>
+      <tr><th>Fastmail</th><td>$1000</td><td>CSS sanitisation bypass (<a href="https://www.fastmail.com/bug-bounty/">HoF</a>)</td></tr>
+      <tr><th>Dashlane</th><td>$1500</td><td>-</td></tr>
+      <tr><th>Bitwarden</th><td>$0</td><td>- (Bitwarden's <a href="https://hackerone.com/bitwarden">Vulnerability Disclosure Program</a> does not pay out bounties)</td></tr>
+      <tr><th>Firefox</th><td>$500</td><td>Information disclosure in the PDF Viewer component (<a href="https://www.mozilla.org/en-US/security/advisories/mfsa2026-01/#CVE-2026-0887">CVE-2026-0887</a>, <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=2006500">Bug 2006500</a>)</td></tr>
+      <tr><th>Google Pay</th><td>$1337</td><td>SVG filter attack on GPay (<a href="https://lyra.horse/slides/#2026-disobey">talk</a>)</td></tr>
+    </tbody>
+  </table>
+  <h3>2025</h3>
+  <table>
+    <thead>
+      <tr><th>Target</th><th>Bounty</th><th>Info</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Apple</th><td>-</td><td>- (<a href="https://support.apple.com/en-us/102774#:~:text=Unit%20%2D%20CMC%20Telecom)-,Lyra%20Rebane%20(rebane2001),-M%20Easwari">HoF</a>)</td></tr>
+      <tr><th>Google Docs</th><td>$3133.70</td><td>SVG filter attack on "Generate document" feature (<a href="https://lyra.horse/blog/2025/12/svg-clickjacking/">blogpost</a>, <a href="https://lyra.horse/slides/#2026-disobey">talk</a>)</td></tr>
+      <tr><th>Lovense</th><td>$10</td><td>E-mail leak (collaborative work, $1000 bounty, I took 1%, <a href="https://bobdahacker.com/blog/lovense-still-leaking-user-emails">blogpost</a>)</td></tr>
+      <tr><th>Lovense</th><td>$30</td><td>Arbitrary Account Takeover (collaborative work, $3000 bounty, I took 1%, <a href="https://bobdahacker.com/blog/lovense-still-leaking-user-emails">blogpost</a>)</td></tr>
+      <tr><th>Fastmail</th><td>$3500</td><td>Multiple CSS sanitisation bypasses (<a href="https://www.fastmail.com/bug-bounty/">HoF</a>, <a href="https://lyra.horse/slides/#2026-disobey">talk</a>)</td></tr>
+      <tr><th>iCloud Mail</th><td>$6000</td><td>CSS sanitization bypass (<a href="https://support.apple.com/en-us/102774#:~:text=Unit%20%2D%20CMC%20Telecom)-,Lyra%20Rebane%20(rebane2001),-Mahmud%20Hasan%20Sizan">HoF</a>, <a href="https://lyra.horse/slides/#2026-disobey">talk</a>)</td></tr>
+      <tr><th>Proton Mail</th><td>€200</td><td>CSS sanitization bypass (<a href="https://proton.me/blog/protonmail-security-contributors#:~:text=Lyra%20Rebane">HoF</a>, <a href="https://lyra.horse/slides/#2026-disobey">talk</a>)</td></tr>
+      <tr><th>Zone Webmail</th><td>€1500</td><td>Multiple vulnerabilities (<a href="https://lyra.horse/slides/#2026-disobey">talk</a>)</td></tr>
+      <tr><th>Google Chrome</th><td>$4000</td><td>Use after free in Animation (<a href="https://chromereleases.googleblog.com/2025/06/stable-channel-update-for-desktop_24.html#:~:text=CVE%2D2025%2D6555">CVE-2025-6555</a>, <a href="https://issues.chromium.org/issues/407328533">407328533</a>)</td></tr>
+    </tbody>
+  </table>
+  <h3>2024</h3>
+  <table>
+    <thead>
+      <tr><th>Target</th><th>Bounty</th><th>Info</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Google Drive</th><td>$5000</td><td>XS-Search on Google Drive (<a href="https://bughunters.google.com/reports/vrp/dVc8oWPXf">report</a>)</td></tr>
+      <tr><th>Safari</th><td>$5000</td><td>- (<a href="https://support.apple.com/en-us/120893#:~:text=CVE%2D2024%2D23259">CVE-2024-23259</a>)</td></tr>
+      <tr><th>Google Chrome</th><td>$5000</td><td>Inappropriate implementation in PictureInPicture (<a href="https://chromereleases.googleblog.com/2024/10/stable-channel-update-for-desktop_15.html#:~:text=CVE%2D2024%2D9958">CVE-2024-9958</a>, <a href="https://issues.chromium.org/issues/40076120">40076120</a>)</td></tr>
+      <tr><th>Google Docs</th><td>$4133.70</td><td>One-click YouTube/Docs/Drive attack chain (<a href="https://lyra.horse/blog/2024/09/using-youtube-to-steal-your-files/">blogpost</a>, <a href="https://lyra.horse/slides/#2025-disobey">talk</a>, <a href="https://bughunters.google.com/reports/vrp/BpTndJ8ut">report</a>)</td></tr>
+      <tr><th>Google Chrome</th><td>$6000</td><td>Integer underflow in WebUI (<a href="https://chromereleases.googleblog.com/2024/01/stable-channel-update-for-desktop_23.html#:~:text=CVE%2D2024%2D0808">CVE-2024-0808</a>, <a href="https://issues.chromium.org/issues/40945515">1504936</a>)</td></tr>
+    </tbody>
+  </table>
+  <h3>2023</h3>
+  <table>
+    <thead>
+      <tr><th>Target</th><th>Bounty</th><th>Info</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Gmail</th><td>$3133.70</td><td>-</td></tr>
+      <tr><th>Google Chrome</th><td>$1000</td><td>Inappropriate implementation in Permission Prompts (<a href="https://chromereleases.googleblog.com/2023/08/stable-channel-update-for-desktop_15.html#:~:text=CVE%2D2023%2D4364">CVE-2023-4364</a>, <a href="https://issues.chromium.org/issues/40062619">1406922</a>)</td></tr>
+      <tr><th>Google Chrome</th><td>$500</td><td>Inappropriate implementation in Extensions API (<a href="https://chromereleases.googleblog.com/2023/05/stable-channel-update-for-desktop_30.html#:~:text=CVE%2D2023%2D2941">CVE-2023-2941</a>, <a href="https://issues.chromium.org/issues/40063885">1430269</a>)</td></tr>
+      <tr><th>Google Chrome</th><td>$3000</td><td>Inappropriate implementation in Prompts (<a href="https://chromereleases.googleblog.com/2023/05/stable-channel-update-for-desktop.html#:~:text=CVE%2D2023%2D2466">CVE-2023-2466</a>, <a href="https://issues.chromium.org/issues/40061783">1385714</a>)</td></tr>
+      <tr><th>Google Chrome</th><td>$1000</td><td>Inappropriate implementation in FedCM (<a href="https://chromereleases.googleblog.com/2023/04/stable-channel-update-for-desktop.html#:~:text=CVE%2D2023%2D1823">CVE-2023-1823</a>, <a href="https://issues.chromium.org/issues/-">1406900</a>)</td></tr>
+      <tr><th>Google Docs</th><td>$500</td><td>-</td></tr>
+      <tr><th>Google Chrome</th><td>$3000</td><td>Inappropriate implementation in Permission prompts (<a href="https://chromereleases.googleblog.com/2023/01/stable-channel-update-for-desktop.html#:~:text=CVE%2D2023%2D0132">CVE-2023-0132</a>, <a href="https://issues.chromium.org/issues/40061230">1371215</a>)</td></tr>
+    </tbody>
+  </table>
+  <h3>2022</h3>
+  <table>
+    <thead>
+      <tr><th>Target</th><th>Bounty</th><th>Info</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Google Docs</th><td>$1337</td><td>One-click data leak (<a href="https://bughunters.google.com/reports/vrp/seSvwqGYs">report</a>)</td></tr>
+      <tr><th>Brave</th><td>$500</td><td>-</td></tr>
+      <tr><th>Discord</th><td>$750</td><td>-</td></tr>
+      <tr><th>Pillowfort</th><td>$500</td><td>-</td></tr>
+      <tr><th>Google Chrome</th><td>$500</td><td>Not a vulnerability, but resulted in a security change (<a href="https://issues.chromium.org/issues/40061219">40061219</a>)</td></tr>
+    </tbody>
+  </table>
+  <h3>2019</h3>
+  <table>
+    <thead>
+      <tr><th>Target</th><th>Bounty</th><th>Info</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Zone Webmail</th><td>€500</td><td>-</td></tr>
+    </tbody>
+  </table>
+  <h3>2018</h3>
+  <table>
+    <thead>
+      <tr><th>Target</th><th>Bounty</th><th>Info</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Google Chrome</th><td>$1000</td><td>UI spoofing in Blink (<a href="https://chromereleases.googleblog.com/2018/05/stable-channel-update-for-desktop_58.html#:~:text=CVE%2D2018%2D6135">CVE-2018-6135</a>, <a href="https://issues.chromium.org/issues/40090850">823353</a>)</td></tr>
+      <tr><th>Postimees</th><td>$0</td><td>ID verfication bypass</td></tr>
+    </tbody>
+  </table>
+  <h3>2014</h3>
+  <table>
+    <thead>
+      <tr><th>Target</th><th>Bounty</th><th>Info</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Bolt (Taxify)</th><td>$0</td><td>Phone verification bypass</td></tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
