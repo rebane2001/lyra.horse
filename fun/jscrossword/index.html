@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JS Crossword</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src data: 'self' 'unsafe-eval' 'unsafe-inline'" />
+    <meta content="JS Crossword" property="og:title" />
+    <meta content="a crossword where the clue = eval(answer)" property="og:description" />
+    <meta content="https://lyra.horse/fun/jscrossword/" property="og:url" />
+    <meta content="https://lyra.horse/fun/jscrossword/banner.png" property="og:image" />
+    <meta content="#F7E018" name="theme-color" />
+    <meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+    <main-content>
+    <main>
+    <h1 style="margin:0 0 0 4px"><span style="background:#F7E018;color:#000;box-shadow: -5px 0 #F7E018, 6px 0 #F7E018;">JS</span> Crossword</h1>
+    <p style="margin-top:0"><i>a crossword where the clue = eval(answer)</i></p>
+    <p>Welcome to JS Crossword! Every clue is a JS eval of its answer - for example, <code>7</code> could be solved with <code>3+4</code> and <code>[object Object]</code> could be solved with <code>[]+{}</code>. This crossword uses some lesser-known and cursed JS features, so I'd recommend it for people already somewhat familiar with JavaScript.</p>
+    <p>You're allowed to use the following characters: <code>A-Za-z0-9!"()*+-./<=>[]`{}</code>. This means that no spaces (empty squares), commas, or semicolons are allowed to be used. The crossword is case-sensitive. The <span data-style="background:#F7E018;color:#000">final answer</span> consists only of english words, so it must match <code>A-Za-z</code>.</p>
+    <p>Your answers will be evaluated within an <code>eval()</code> sandbox, you can try it out at the <a href="#playground-input">playground</a> below. You're of course also allowed to use other resources, such as DevTools, MDN, searching etc. This crossword is human-made, so if you solve it with AI you're lame, learn to have fun.</p>
+    <p>You can change the writing direction by clicking a square or pressing ctrl. Your progress is saved locally.</p>
+    <p>Color legend: <span style="background:#77FF77">(possibly) correct answer</span>, <span style="background:#E49BC0">invalid characters</span>, <span style="background:#EF6767">error</span>, <span style="background:#DDDDDD">pre-filled</span></p>
+    <p><i>Share your thoughts on: <span id="syt"><a href="#">fedi</a>, <a href="#">bsky</a>, <a href="#">twitter</a></span>.</i></p>
+<table data-dir="right" spellcheck="false" id=crossword></table>
+<button onclick="clearCrossword()">clear</button>
+<h2>Status</h2>
+<result-box>
+<div data-across>
+    <i><b>Across</b></i>
+    <div data-expected> expect:</div>
+    <div data-actual> actual:</div>
+</div>
+<div data-down>
+    <i><b>Down</b></i>
+    <div data-expected> expect:</div>
+    <div data-actual> actual:</div>
+</div>
+</result-box>
+
+<h2>Playground</h2>
+<div style="font-family:ui-monospace,monospace">
+<span id="playground-count" style="white-space: pre;"> 0</span><input style="font:inherit;margin: 0 8px;width:32ch" type="text" id="playground-input" placeholder="e.g. window.location.href"><span id="playground-output"></span>
+</div>
+</main>
+<aside><h2>Clues</h2>
+<questions-thing>
+    <h3 id="h3-across">across (0/34)</h3>
+    <div id="q-across"></div>
+    <h3 id="h3-down">down (0/26)</h3>
+    <div id="q-down"></div>
+</questions-thing>
+
+</aside>
+</main-content>
+<p>Made by <a href="https://lyra.horse/">Lyra Rebane</a>, May 2026<br>Special thanks to <a href="https://jorianwoltjer.com/">Jorian Woltjer</a> for playtesting!</p>
+
+<style>
+    html {
+        font-family: system-ui;
+    }
+    main-content {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    questions-thing {
+        outline: 2px solid #000;
+        outline-offset: 4px;
+        border-radius: 2px;
+        max-height: 90vh;
+        overflow-y: auto;
+        display: block;
+        margin: 4px 0;
+        @media (width<1240px) {
+            columns: 3;
+        }
+        @media not (width<1240px) {
+            margin-left:20px;
+            position: fixed;
+            aside:has(>&) h2{opacity:0}
+        }
+        @media (width>1465px) {
+            columns: 2;
+            margin-left:min(20px, calc(100vw - 1465px));
+        }
+        
+        p {
+            margin: 0;
+        }
+    }
+    main {
+        max-width: 866px;
+        width: 866px;
+    }
+    h2,h3 {
+        margin: 0;
+    }
+    result-box {
+        font-family: ui-monospace, monospace;
+        display: block;
+        background: #DDD;
+        border: 2px solid #000;
+        border-radius: 2px;
+        &>div {
+            padding: 8px;
+            &[data-across] {
+                padding-bottom: 4px;
+            }
+            &[data-down] {
+                padding-top: 4px;
+            }
+        }
+        &>div>div { white-space: pre;
+        text-overflow: ellipsis;
+        overflow: clip; }
+    }
+    audio { width:100% }
+    #crossword {
+        table-layout: fixed;
+        width: 0;
+        border-collapse: collapse;
+        * {
+            box-sizing: border-box;
+        }
+        font-weight: 600;
+        font-family: ui-monospace, monospace, system-ui;
+        text-align: center;
+        /*input::selection {
+            background: #FF0;
+            color: #000;
+        }*/
+         input::selection {background:#000;color: #FFF;}
+        tr {
+            height: 32px;
+            td {
+                position: relative;
+                border: 1px solid black;
+                width: 32px;
+                height: 32px;
+                input {
+                    border: none;
+                    width: 100%;
+                    height: 100%;
+                    font: inherit;
+                    text-align: center;
+                    background: #0000;
+                    color:inherit;
+                    &:disabled {
+                        cursor: not-allowed;
+                        /*font-style: italic;*/
+                        background: #0002;
+                    }
+                }
+                &[data-qq] {
+                    user-select: none;
+                    --bg: #000;
+                    &:hover {
+                        --bg: #880;
+                        /*--bg: #FF0;*/
+                        color:#000;
+                    }
+                    background: var(--bg);
+                    color: #FFF;
+                    &[data-qq="0"] {
+                        background: #F7E018;
+                        &::before {
+                            content:"";
+                            background: #000;
+                            position: absolute;
+                            inset: 6px 11px 10px;
+                        }
+                        &::after {
+                        content: "";
+                        position: absolute;
+                        bottom: 7px;
+                        left: 8px;
+                        border: 7px solid #0000;
+                        border-bottom-color: #000;
+                        border-right-color: #000;
+                        rotate: 45deg;
+                        translate: 0.5px 0;
+                        }
+                    }
+                }
+                &[data-qd]::after {
+                    position: absolute;
+                    content:"";
+                    top:100%;
+                    left:0;
+                    right:0;
+                    bottom: 0;
+                    border: 16px solid #0000;
+                    border-top-color: rgb(from var(--bg) r g b / 0.5);
+                    display: block;
+                    transform-origin: 0 0;
+                    scale: 1 0.5;
+                    pointer-events: none;
+                    z-index: 1;
+                    
+                }
+                &[data-c="⑫"]::after {
+                        top:0;
+                        bottom:100%;
+                        translate: 0 -9px;
+                }
+                &[data-d="12"][data-r="18"] {
+                    border-top: 3px solid #000;
+                }
+                &[data-qr]::before {
+                    position: absolute;
+                    content:"";
+                    left:100%;
+                    right:0;
+                    top: 0;
+                    bottom: 0;
+                    border: 16px solid #0000;
+                    border-left-color: rgb(from var(--bg) r g b / 0.5);
+                    display: block;
+                    transform-origin: 0 0;
+                    scale: 0.5 1;
+                    pointer-events: none;
+                    z-index: 1;
+                }
+            }
+        }
+    }
+</style>
+
+<dialog id="win-1-dialog">
+    <h2>Woohoo!</h2>
+  <p>You've solved the final answer of the crossword: <b>horses gonna answer</b>!</p>
+  <p>Want a cooler ending? Solve the entire board :P!</p>
+  <button commandfor="win-1-dialog" command="close">Continue</button>
+</dialog>
+<dialog id="win-2-dialog">
+    <h2>whoaw!!</h2>
+  <p>you did it! the entire crossword!!</p>
+  <p>do u wanna see an epic ending</p>
+  <p><i>note: plays with audio and has intense visuals</i></p>
+  <button commandfor="win-2-dialog" command="close" onclick="goodEnding()">hell yeah!</button>
+  <button commandfor="win-2-dialog" command="close">nah</button>
+</dialog>
+<!-- document.getElementById("win-2-dialog").showModal(); -->
+<dialog id="win-3-dialog" closedby="none">
+    <h2>win!!</h2>
+  <p>congrats on winning the crossword thing!<br>if u wanna see a replay of ur play by itself, just refresh the page and run the replayCapture() function in the js console.<br>all replay data is only stored locally, i don't collect data or statistics on the crossword!</p>
+  <p>song: <a href="https://soundcloud.com/fortheinternet/its-giving-music" target="_blank">revolea - its giving music</a></p>
+  <p>let me know what u thought: <span id="lmk"></span></p>
+  <audio id=mainAudio controls></audio>
+  <p id=cheated>btw if u cheated to see this ending - its a lot more fun with the actual timelapse data</p>
+</dialog>
+
+<div style="display:none">
+<pre id=output></pre>
+<iframe sandbox='allow-scripts' id='sandbox'></iframe>
+</div>
+<!--
+① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩
+⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳
+❶ ❷ ❸ ❹ ❺ ❻ ❼ ❽ ❾ ❿
+⓫ ⓬ ⓭ ⓮ ⓯ ⓰ ⓱ ⓲ ⓳ ⓴
+₁ ₂ ₃ ₄ ₅ ₆ ₇ ₈ ₉ ₀
+-->
+<script>
+    // WARNING! This contains the solution to the crossword, so don't decode it unless you want to spoil it for yourself.
+    let SOLUTION = new TextDecoder().decode(Uint8Array.fromHex(btoa('ÛM´ÛG¶÷v\x9DÛM´{o]mý´ÛM´ÛM´{oukÍ´ÛM´ÛM´ÛG¶÷vßÛM´{o6ó·¶÷VöÛM´ÛM\x1AÛM´{o]mí\x9BÙþµÙ÷¶õÖûÛÎÛíÝ\x9Bå¾]ÛÝ\x9Eë^\x9Eë~¼éþöëM¼ëM´ÛM\x1AÛG¶õÖÜÙþøïnùë\x9D\x9FÙ¾Ûí×¶÷v\x9CÛnµÛg¶÷V´{owi·¶÷V÷Ûn\x9Féþ\x9Féý¶{o6ó\x9D´ÛM\x1AÛN¶Ùþö{ouk\x8Dµë\x8E\x9Fë~ùéÞ¹éîøÙîµéÎ\x9C{o]o®öÝÝ¶ïm¶ß\x9D´ÛM\x1A{o]mÞøïnùë\x97¶÷v\x9EÙþ\x9DÙý\x9BÛn\x9DÛg¶÷VµënøéþµÛÎ÷ë\x9E\x9Cë­½ß}´ÛM\x1A{owiþ\x9FïN¹éíø{o]oÞ»ÛG¶÷V»ÛÎ[åÝ\x9Bë\x8E\x9Fë~ùéÞ¹éîøÛÞ[ßÞ]ÛM\x1A{o6óÎµï\x8E\x9Fëg¶õÖüå½\x9EÙí\x9EÛmõßm¶åÞ¶ë]´{o6ó\x8Ewë\x9EøÙ½ôéí´ÛM\x1A{oukÝ¼í¾ÝÙ½\x9FáÝ\x9FÛÝ\x9Eï~ôéÎ½ï\x8E´ï\x8E´{o6ó®»ÝÞ[ß¾]ÛM´{o6óM\x1A{o]m®\x1Dë^øëÍ\x9Eë^÷ëÞ\x9EëMõëM¶{oukn{ëÞ\x9Eë\x8E\x9Fï½\x9EéîµéÞ¹ã­\x1AÛNµÛG¶÷vøÛG¶÷Võï\x8EýïN¹éþºÛÎ[ÙþÚéýµï¾\x9EÙþ]ÛÝ´ÛM´ï\x9D\x1AÛNø{o]m¾\x1Dë^øëÍ\x9EáÎ\x1Eßm´{ouk}ôÙ®=éîºëÞ\x9EëÞøïÝ´ÛM´éí\x1AÛN¼ÛNµÛN\x9FÙç¶÷vö{oui®¼ëÞ÷ï\x8E\x9FïnýÙî÷ï\x8Eµï\x8E¹ë\x9D´ÛM´ë}´Ñ­´Ùç¶óo5ï\x8D´éþ\x9Cï\x8EüÛM´{o6ó×¶÷VºßM\x9AçÇ¶÷V\x9E{ouiþ¼ë]ÝÛn¼ë]¶ÛNøÛM´ÛM´Ñ­´ã\x9DôëÇ¶÷v÷éÎ\x9FëÍÝßW¶÷V¹Ùþ[åÝ\x9Fë\x8EýÙ½¼éîµéÞ¹ÛÝ´ÛN½Ñ­´ÛÞüÙí´ën»ëÞ´ÛG¶÷VôÙþ]ßÝúëMÝÙÝõï~¹ïÎ´Ùý´ÛN\x9FÛM´ÛM\x1AÛG¶÷võënøéþµëN÷ëM´{ouiÞ½ë­¼ß½ôß]ôÛÞûëÞ\x9Eë\x8E\x9Fï½´éí\x1A{owoN´ÝÎµÝîöëM\x9EéÎ½éî\x9BëM¶ëG¶÷V\x9CßNüß®¹ÛM´ÛM´ÛM´ÛÍ\x1A{o6óm÷ß¾\x9EÛM´åÞüÛM´ÛG¶óo7áÞµï\x8E¼Ùî9{oui¾vë\x9E»ã\x9EüïM¼Û').replace("w==","9")));
+    const ANSWERHASH = "3fc68d2ecf66c45bf5428c9c24435e1fa73c23f1a5344f28d6fb59070dc5ceca";
+
+const ALLOWED_CHARS = /^[A-Za-z0-9!"()*+./<>=[\]`"{}-]+$/;
+const RGHT = 0;
+const DOWN = 1;
+const crossword = document.getElementById("crossword");
+const qAcross = document.getElementById("q-across");
+const qDown = document.getElementById("q-down");
+const h3Across = document.getElementById("h3-across");
+const h3Down = document.getElementById("h3-down");
+
+let congratulated_1 = false;
+let congratulated_2 = false;
+let captureEnabled = false;
+let captureData = localStorage.getItem("js-crossword-capture")||"";
+
+crossword.addEventListener(`dragstart`, (event) => event.preventDefault());
+
+const PREFILLED = "12,19 7,19 3,5 1,4 10,15 12,18 11,18 11,16 3,19 5,17 3,17 2,18 13,23 8,15 6,15 12,15 8,5 9,14 15,24 13,18 11,12 3,8 8,13 13,2 15,13 15,18 8,21 11,10 11,14 11,20 9,19".split(" ");
+
+const QUESTIONS = {
+"⓿": [],
+"①": [[DOWN,12],],
+"②": [[RGHT,10],[DOWN,9],],
+"③": [[RGHT,11],[DOWN,7],],
+"④": [[RGHT,10],],
+"⑤": [[RGHT,13],],
+"⑥": [[RGHT,13],],
+"⑦": [[DOWN,2],],
+"⑧": [[RGHT,16],],
+"⑨": [[DOWN,5],],
+"⑩": [[RGHT,17],],
+"⑪": [[RGHT,13],[DOWN,4],],
+"⑫": [[RGHT,8],[DOWN,8]],
+"⑬": [[RGHT,4],],
+"⑭": [[RGHT,14],],
+"⑮": [[DOWN,4],],
+"⑯": [[RGHT,7],[DOWN,5],],
+"⑰": [[RGHT,13],],
+"⑱": [[RGHT,17],[DOWN,7],],
+"⑲": [[DOWN,7],],
+"⑳": [[RGHT,6],],
+"❶": [[RGHT,5],],
+"❷": [[RGHT,17],[DOWN,8],],
+"❸": [[RGHT,9],],
+"❹": [[DOWN,12],],
+"❺": [[RGHT,12],],
+"❻": [[RGHT,8],],
+"❼": [[RGHT,9],[DOWN,12],],
+"❽": [[RGHT,4],],
+"❾": [[RGHT,4],[DOWN,4],],
+"❿": [[DOWN,4],],
+"⓫": [[DOWN,8],],
+"⓬": [[RGHT,3],],
+"⓭": [[DOWN,5],],
+"⓮": [[RGHT,7],[DOWN,1],],
+"⓯": [[RGHT,4],],
+"⓰": [[RGHT,14],],
+"⓱": [[RGHT,7],],
+"⓲": [[DOWN,6],],
+"⓳": [[RGHT,5],],
+"⓴": [[DOWN,8],],
+"₁": [[DOWN,5],],
+"₂": [[RGHT,3],],
+"₃": [[RGHT,6],],
+"₄": [[RGHT,6],],
+"₅": [[DOWN,4],],
+"₆": [[RGHT,5],],
+"₇": [[DOWN,14],],
+"₈": [[RGHT,4],],
+"₉": [[DOWN,4],],
+"₀": [[DOWN,10],],
+}
+
+const ANSWERS = [{},{}];
+const ASTATUS = [{},{}];
+
+function congratulate_1() {
+    congratulated_1 = true;
+    document.getElementById("win-1-dialog").showModal();
+}
+
+function congratulate_2() {
+    congratulated_2 = true;
+    document.getElementById("win-2-dialog").showModal();
+    mainAudio.src = "itsgivingmusic.mp3";
+    mainAudio.volume = 0;
+}
+
+function updateStatusText(cell) {
+    const acQ = cell?.dataset?.r;
+    const dwQ = cell?.dataset?.d;
+
+    const ac = document.querySelector("result-box [data-across]");
+    const dw = document.querySelector("result-box [data-down]");
+
+    ac.style.backgroundColor = "#0000";
+    dw.style.backgroundColor = "#0000";
+    if (!acQ) {
+        ac.querySelector("[data-expected]").innerText = " "
+        ac.querySelector("[data-actual]").innerText = " "
+    } else {
+        const isErr = ASTATUS[RGHT][acQ][1];
+        const isWarn = ASTATUS[RGHT][acQ][3];
+        ac.querySelector("[data-expected]").innerText = " expect: " + ANSWERS[RGHT][acQ];
+        ac.querySelector("[data-actual]").innerText = (isErr?"  error: ":" actual: ") + ASTATUS[RGHT][acQ][2].replace(/[\n\r\f]/g, " ");
+        if (isErr)
+            ac.style.backgroundColor = "#F008";
+        if (ASTATUS[RGHT][acQ][0])
+            ac.style.backgroundColor = (isWarn?"#D488":"#0F08");
+    }
+    if (!dwQ) {
+        dw.querySelector("[data-expected]").innerText = " "
+        dw.querySelector("[data-actual]").innerText = " "
+    } else {
+        const isErr = ASTATUS[DOWN][dwQ][1];
+        const isWarn = ASTATUS[DOWN][dwQ][3];
+        dw.querySelector("[data-expected]").innerText = " expect: " + ANSWERS[DOWN][dwQ];
+        dw.querySelector("[data-actual]").innerText = (isErr?"  error: ":" actual: ") + ASTATUS[DOWN][dwQ][2].replace(/[\n\r\f]/g, " ");
+        if (isErr)
+            dw.style.backgroundColor = "#F008";
+        if (ASTATUS[DOWN][dwQ][0])
+            dw.style.backgroundColor = (isWarn?"#D488":"#0F08");
+    }
+}
+
+function setQStatus(direction,qNum,isOk,isErr,res,isWarn) {
+    ASTATUS[direction][qNum] = [isOk,isErr,res,isWarn];
+    crossword.dataset[`${direction?"d":"r"}${qNum}`] = isOk?(isWarn?"warn":"ok"):(isErr?"err":"");
+    h3Across.innerText = `across (${Object.values(ASTATUS[RGHT]).filter(e=>e[0]&&!e[3]).length}/${Object.values(ASTATUS[RGHT]).length})`;
+    h3Down.innerText   = `down (${  Object.values(ASTATUS[DOWN]).filter(e=>e[0]&&!e[3]).length}/${Object.values(ASTATUS[DOWN]).length})`;
+}
+
+async function recheckAll() {
+    const codes = [];
+    Object.entries(QUESTIONS).forEach(([q,v]) => {
+            const qRow = virtualTable.findIndex(r=>r.find(c=>c.dataset.c==q));
+            const qCol = virtualTable[qRow].findIndex(c=>c.dataset.c==q);
+            // console.log(q,qRow,qCol)
+            v.forEach(e=>{
+                let x = qCol;
+                let y = qRow;
+                let xD = 0;
+                let yD = 0;
+                let code = "";
+                if (e[0] == RGHT) xD = 1;
+                if (e[0] == DOWN) yD = 1;
+                let qNum = virtualTable[y][x].innerText;
+                // if (e[0] == RGHT) return;
+                x+=xD;
+                y+=yD;
+                if (q=="⑫" && e[0] == DOWN) y-=e[1]+1;
+                for (let i = 0; i<e[1]; i++) {
+                    code += virtualTable[y][x].querySelector("input").value||" ";
+                    x+=xD;
+                    y+=yD;
+                }
+                codes.push([qNum,code,e[0]]);
+            });
+    });
+    for (const direction of [RGHT,DOWN])
+    for (const code of codes) {
+        if (code[2] != direction) continue;
+        const res = code[1].trim().length ? procRes(await safeEval(code[1], false)) : [0, "undefined"];
+        const isErr = res[0];
+        const isOk = code[1].trim().length && ANSWERS[direction][code[0]] == res[1];
+        const isWarn = code[1].trim().length && !ALLOWED_CHARS.test(code[1]);
+        setQStatus(direction,code[0],isOk,isErr,res[1],isWarn);
+    }
+    let answerHash = new Uint8Array(await window.crypto.subtle.digest("SHA-256", new TextEncoder().encode([...document.querySelectorAll('[data-yx$=",19"]:has(input) input')].map(e=>e.value).join("").toLowerCase()))).toHex();
+    if (ANSWERHASH.toLowerCase() == answerHash.toLowerCase() && !congratulated_1)
+        congratulated_1 = true;
+    if (Object.values(ASTATUS[RGHT]).length && Object.values(ASTATUS[RGHT]).every(e=>e[0]&&!e[3]) && Object.values(ASTATUS[DOWN]).every(e=>e[0]&&!e[3]) && !congratulated_2)
+        congratulate_2();
+    crossword.inert = false;
+    captureEnabled = true;
+}
+
+function clearCrossword() {
+    if (confirm("Clear entire crossword? (can't undo)")) {
+        captureData = "";
+        document.querySelectorAll("#crossword td > input:not(:disabled)").forEach(e=>e.value="");
+        saveCellData();
+        recheckAll();
+    }
+}
+
+function findNextCell(virtualTable, current, delta) {
+    let y = current[0];
+    let x = current[1];
+    while (x >= 0 && y >= 0 && x < virtualTable[0].length && y < virtualTable.length) {
+        y+=delta[0];
+        x+=delta[1];
+        const nextCell = virtualTable?.[y]?.[x];
+        if (nextCell && nextCell.querySelector("input:not(:disabled)"))
+            return nextCell;
+    }
+}
+
+function procRes(res) {
+    res[1] = res[1].replace(/(data:text\/html;base64,).*/,"$1... (truncated)");
+    return res;
+}
+
+function saveCellData() {
+    if (!captureEnabled) return;
+    localStorage.setItem("js-crossword-progress", [...document.querySelectorAll("#crossword td > input")].map(e=>(e.value+" ").slice(0,1)).join(""));
+    localStorage.setItem("js-crossword-capture", captureData);
+}
+
+async function recheckCell(cell, skipReset) {
+    saveCellData();
+    if (cell.dataset.d) {
+        const squares = [...document.querySelectorAll(`[data-d="${cell.dataset.d}"]`)];
+        const code = squares.map(e=>e.querySelector("input").value||" ").join("");
+        const res = procRes(await safeEval(code, skipReset));
+        const isErr = res[0];
+        const isOk = code.trim().length && ANSWERS[DOWN][cell.dataset.d] == res[1];
+        const isWarn = code.trim().length && !ALLOWED_CHARS.test(code);
+        setQStatus(DOWN,cell.dataset.d,isOk,isErr,res[1],isWarn);
+    }
+    if (cell.dataset.r) {
+        const squares = [...document.querySelectorAll(`[data-r="${cell.dataset.r}"]`)];
+        const code = squares.map(e=>e.querySelector("input").value||" ").join("");
+        const res = procRes(await safeEval(code, skipReset));
+        const isErr = res[0];
+        const isOk = code.trim().length && ANSWERS[RGHT][cell.dataset.r] == res[1];
+        const isWarn = code.trim().length && !ALLOWED_CHARS.test(code);
+        setQStatus(RGHT,cell.dataset.r,isOk,isErr,res[1],isWarn);
+    }
+    let answerHash = new Uint8Array(await window.crypto.subtle.digest("SHA-256", new TextEncoder().encode([...document.querySelectorAll('[data-yx$=",19"]:has(input) input')].map(e=>e.value).join("").toLowerCase()))).toHex();
+    if (ANSWERHASH.toLowerCase() == answerHash.toLowerCase() && !congratulated_1)
+        congratulate_1();
+    if (Object.values(ASTATUS[RGHT]).length && Object.values(ASTATUS[RGHT]).every(e=>e[0]&&!e[3]) && Object.values(ASTATUS[DOWN]).every(e=>e[0]&&!e[3]) && !congratulated_2)
+        congratulate_2();
+}
+
+function makeNoteOf(inputEl) {
+    if (!captureEnabled) return;
+    captureData += inputEl.parentElement.dataset.yx.split(",").map(e=>parseInt(e).toString(36)).join("") + (inputEl.value + " ").slice(0,1);
+}
+
+async function replayCapture() {
+    captureEnabled = false;
+    crossword.inert = true;
+    document.querySelectorAll("#crossword td > input:not(:disabled)").forEach(e=>e.value="");
+    await recheckAll();
+    captureEnabled = false;
+    crossword.inert = true;
+    let i = 0;
+    while (i < captureData.length) {
+        const cell = document.querySelector(`[data-yx="${parseInt(captureData[i++], 36)},${parseInt(captureData[i++], 36)}"]`);
+        cell.querySelector("input").value = (captureData[i++]).replace(" ", "");
+        await recheckCell(cell, true);
+        await new Promise(requestAnimationFrame);
+        await new Promise(requestAnimationFrame);
+    }
+    await recheckAll();
+    captureEnabled = false;
+    // crossword.inert = false;
+}
+
+let replayProgress = 0;
+async function initReplay() {
+    captureEnabled = false;
+    crossword.inert = true;
+    document.querySelectorAll("#crossword td > input:not(:disabled)").forEach(e=>e.value="");
+    await recheckAll();
+    captureEnabled = false;
+    crossword.inert = true;
+    replayProgress = 0;
+}
+
+async function replayNext() {
+    if (replayProgress >= captureData.length) return;
+    const cell = document.querySelector(`[data-yx="${parseInt(captureData[replayProgress++], 36)},${parseInt(captureData[replayProgress++], 36)}"]`);
+    cell.querySelector("input").value = (captureData[replayProgress++]).replace(" ", "");
+    await recheckCell(cell, true);
+    //await new Promise(requestAnimationFrame);
+    return cell;
+}
+
+async function goodEnding() {
+    await initReplay();
+    await startAudio();
+}
+
+let currentDir = RGHT;
+const virtualTable = [];
+
+function switchDir() {
+    currentDir = 1 - currentDir;
+    crossword.dataset.dir = currentDir ? "down" : "right";
+}
+
+    async function createTable() {
+
+        const saveData = (localStorage.getItem("js-crossword-progress")??"") + " ".repeat(1000);
+        let saveDataIdx = 0;
+
+        let codes = [];
+        const table = document.querySelector("#crossword");
+        
+        let extraStyles = "";
+        SOLUTION.split('\n').forEach((e,i) => {
+            const row = table.insertRow(-1);
+            const virtualRow = [];
+            [...e].forEach((f,j) => {
+                const cell = row.insertCell(-1);
+                virtualRow.push(cell);
+                cell.dataset.c = f;
+                cell.dataset.yx = [i,j];
+                // cell.innerText = f;
+                if (f == " ") {
+                    cell.style.border="none";
+                    cell.style.background="grey";
+                } else if (Object.keys(QUESTIONS).includes(f)) {
+                    const q = Object.keys(QUESTIONS).indexOf(f);
+                    cell.dataset.qq = q;
+                    if (QUESTIONS[f].find(e=>e[0]==DOWN))
+                        cell.dataset.qd = "yes";
+                    if (QUESTIONS[f].find(e=>e[0]==RGHT))
+                        cell.dataset.qr = "yes";
+                    cell.innerText = q;
+                    if (q == 0)
+                        cell.innerText = "";
+                    //cell.innerText = "🡇";
+                    extraStyles += `
+
+                        body:has(#crossword[data-r${q}="ok"]) #q-across [data-qq="${q}"]   { background: #0F04; }
+                        body:has(#crossword[data-d${q}="ok"]) #q-down [data-qq="${q}"]     { background: #0F04; }
+                        body:has(#crossword[data-r${q}="warn"]) #q-across [data-qq="${q}"] { background: #C484; }
+                        body:has(#crossword[data-d${q}="warn"]) #q-down [data-qq="${q}"]   { background: #C484; }
+
+                        body:has([data-qq="${q}"]:hover) [data-qq="${q}"], body:has([data-d="${q}"]:focus-within, [data-d="${q}"]:hover) #q-down [data-qq="${q}"], body:has([data-r="${q}"]:focus-within, [data-r="${q}"]:hover) #q-across [data-qq="${q}"]
+                         {  
+                            background: #FF0!important;
+                            color:#000!important;
+                        }
+
+                        #crossword:has(td[data-d="${q}"]:focus-within) td[data-d="${q}"], #crossword:has(td[data-r="${q}"]:focus-within) td[data-r="${q}"] { background: #FFC; }
+                        #crossword[data-dir="down"]:has(td[data-d="${q}"]:focus-within) td[data-d="${q}"], #crossword[data-dir="right"]:has(td[data-r="${q}"]:focus-within) td[data-r="${q}"] { background: yellow; }
+
+                        #crossword[data-d${q}="ok"]     td[data-d="${q}"], #crossword[data-r${q}="ok"] td[data-r="${q}"] { box-shadow: 0 0 0 32px #0F08 inset; }
+                        #crossword[data-d${q}="warn"] td[data-d="${q}"], #crossword[data-r${q}="warn"] td[data-r="${q}"] { box-shadow: 0 0 0 32px #C488 inset; }
+                        /*#crossword[data-d${q}="err"] td[data-d="${q}"], #crossword[data-r${q}="err"] td[data-r="${q}"] { box-shadow: 0 0 0 32px #F002 inset; }*/
+                    `
+                } else {
+                    const inputEl = document.createElement("input");
+                    cell.appendChild(inputEl);
+                    `autocorrect=off autocapitalize=none autocomplete=off`.split(" ").forEach(v => inputEl.setAttribute(...v.split("=")));
+                    inputEl.maxLength = 2;
+                    inputEl.value = saveData[saveDataIdx].replace(/ /g,'');
+                    // CHEAT: pre-fill answers
+                    if (location.hash.includes("cheat-fill-all"))
+                        inputEl.value = f;
+                    if (PREFILLED.includes(cell.dataset.yx)) {
+                        inputEl.value = f;
+                        inputEl.disabled = true;
+                    }
+                    saveDataIdx++;
+                    inputEl.onfocus = async () => {
+                        inputEl.setSelectionRange(0, 1);
+                        await recheckCell(cell);
+                        updateStatusText(document.activeElement.parentElement);
+                        inputEl.setSelectionRange(0, 1);
+                    }
+                    inputEl.oninput = async () => {
+                        const cellDir = inputEl.value.length ? 1 : -1;
+                        inputEl.value = inputEl.value.replace(/\s/g,'').slice(0,1);
+                        makeNoteOf(inputEl);
+                        findNextCell(virtualTable, [i,j], [cellDir*currentDir,cellDir*(1-currentDir)])?.querySelector?.("input")?.focus?.();
+                        await recheckCell(cell);
+                        updateStatusText(document.activeElement.parentElement);
+                    };
+                    inputEl.onmousedown = () => {if(document.activeElement == inputEl)switchDir();
+                        inputEl.setSelectionRange(0, 1);}
+                    inputEl.onmouseup = () => {
+                        inputEl.setSelectionRange(0, 1);}
+                    inputEl.onkeydown = (e) => {
+                        yD = 0;
+                        xD = 0;
+                        // console.log(e.key)
+                        switch (e.key) {
+                            case "Control":
+                                switchDir();
+                                return
+                            case "Backspace":
+                                yD = -currentDir;
+                                xD = -(1-currentDir);
+                                inputEl.value = "";
+                                makeNoteOf(inputEl);
+                                recheckCell(cell);
+                                e.preventDefault();
+                                break;
+                            case "Delete":
+                                yD = currentDir;
+                                xD = (1-currentDir);
+                                inputEl.value = "";
+                                makeNoteOf(inputEl);
+                                recheckCell(cell);
+                                e.preventDefault();
+                                break;
+                            case " ":
+                                yD = currentDir;
+                                xD = (1-currentDir);
+                                inputEl.value = "";
+                                makeNoteOf(inputEl);
+                                recheckCell(cell);
+                                e.preventDefault();
+                                break;
+                            case "Tab":
+                                const s = e.shiftKey ? -1 : 1;
+                                const c = findNextCell(virtualTable, [i,j], [s*currentDir,s*(1-currentDir)])?.querySelector?.("input");
+                                if (c) {
+                                    c.focus();
+                                    e.preventDefault();
+                                }
+                                return;
+                            case "ArrowUp":
+                                yD = -1;
+                                break;
+                            case "ArrowDown":
+                                yD = 1;
+                                break;
+                            case "ArrowLeft":
+                                xD = -1;
+                                break;
+                            case "ArrowRight":
+                                xD = 1;
+                                break;
+                            default:
+                                return;
+                        }
+                        findNextCell(virtualTable, [i,j], [yD,xD])?.querySelector?.("input")?.focus?.();
+                    };
+                }
+                // cell.contentEditable = "plaintext-only";
+            });
+            virtualTable.push(virtualRow);
+        });
+
+        Object.entries(QUESTIONS).forEach(([q,v]) => {
+            const qRow = virtualTable.findIndex(r=>r.find(c=>c.dataset.c==q));
+            const qCol = virtualTable[qRow].findIndex(c=>c.dataset.c==q);
+            // console.log(q,qRow,qCol)
+            v.forEach(e=>{
+                let x = qCol;
+                let y = qRow;
+                let xD = 0;
+                let yD = 0;
+                let code = "";
+                if (e[0] == RGHT) xD = 1;
+                if (e[0] == DOWN) yD = 1;
+                let qNum = virtualTable[y][x].innerText;
+                x+=xD;
+                y+=yD;
+                if (q=="⑫" && e[0] == DOWN) y-=e[1]+1;
+                for (let i = 0; i<e[1]; i++) {
+                    // virtualTable[y][x].style.background="#000000".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
+                    virtualTable[y][x].dataset.qNum = qNum;
+                    virtualTable[y][x].dataset[e[0]?"d":"r"] = qNum;
+                    code += virtualTable[y][x].dataset.c;
+                    x+=xD;
+                    y+=yD;
+                }
+                if (virtualTable[y]?.[x] && ![" ", ...Object.keys(QUESTIONS)].includes(virtualTable[y][x].dataset.c)) {
+                x-=xD;
+                y-=yD;
+
+                if (e[0] == RGHT) virtualTable[y][x].style.borderRight = "3px solid black";
+                if (e[0] == DOWN) virtualTable[y][x].style.borderBottom = "3px solid black";
+                }
+                codes.push([qNum,code,e[0]]);
+              
+                
+            });
+        });
+
+        const styleEl = document.createElement("style");
+        styleEl.textContent = extraStyles;
+        document.head.appendChild(styleEl);
+
+        for (const direction of [RGHT,DOWN])
+        for (const code of codes) {
+            if (code[2] != direction) continue;
+            
+            const res = procRes(await safeEval(code[1], code[0] != 38));
+            if (location.hash.includes("cheat-print-debug"))
+                console.log(code[1], "->", res[1]);
+            output.innerText += `${code[0]} - ${res[1]}\n`;
+            const qEl = document.createElement("p");
+            qEl.innerText = `${code[0]}. ${res[1]}`;
+            qEl.dataset.qq = code[0];
+            [qAcross,qDown][direction].appendChild(qEl);
+            ANSWERS[direction][code[0]] = res[1];
+            ASTATUS[direction][code[0]] = [false,false,""];
+        }
+        await recheckAll();
+
+        let mainAnswer = new Uint8Array(await window.crypto.subtle.digest("SHA-256", new TextEncoder().encode([...document.querySelectorAll('[data-yx$=",19"]:has(input)')].map(e=>e.dataset.c).join("").toLowerCase()))).toHex();
+        if (ANSWERHASH.toLowerCase() != mainAnswer.toLowerCase())
+            alert("Answer hash wrong - this should never happen! Please contact me and let me know");
+        SOLUTION = "nope!";
+    }
+
+    const sandbox = document.getElementById("sandbox");
+    const SANDBOX_URL = "data:text/html;base64," + btoa(`<!DOCTYPE html>
+<html>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'unsafe-eval' 'unsafe-inline'" />
+    <script>
+        name = '';
+        window.addEventListener('message', function (messageEvent) {
+            if (!messageEvent.ports.length) return;
+            if (messageEvent.origin != "${location.origin}") return console.error(\`bad origin: \${messageEvent.origin}\`);
+            try {
+                messageEvent.ports[0].postMessage([0,eval(messageEvent.data)+""]);
+            } catch (err) {
+                messageEvent.ports[0].postMessage([1,err+""]);
+            }
+            
+        });
+    <\/script>
+</html>`);
+    let isSetup = true;
+    async function resetBox() {
+        if (!isSetup) return;
+        isSetup = false;
+        sandbox.src = SANDBOX_URL;
+        const promise = new Promise((resolve) => {
+            sandbox.addEventListener("load", () => {
+                isSetup = true;
+                resolve();
+            }, { once: true });
+        });
+        return await promise;
+    }
+    async function safeEval(s, skipReset) {
+        if (!skipReset || !isSetup)
+            await resetBox();
+        if (!isSetup) {
+            // console.warn("waiting for setup");
+            for (let i = 0; i < 100; i++) {
+                if (!isSetup) {
+                    await new Promise(r => setTimeout(r, 10));
+                }
+            }
+            if (!isSetup)
+                return console.error("not setup");
+        }
+        const channel = new MessageChannel();
+        const promise = new Promise((resolve) => {
+            let done = false;
+            channel.port1.onmessage = (e) => {
+                done = true;
+                channel.port1.close();
+                resolve(e.data);
+            };
+            setTimeout(() => done || (resolve([2, "Timed out"]) && resetBox()), 1000);
+        });
+        sandbox.contentWindow.postMessage(s, "*", [channel.port2]);
+        const result = await promise;
+        return result;
+    }
+
+    let launched = false;
+    async function launch() {
+        if (launched) return;
+        launched = true;
+        crossword.inert = true;
+        await resetBox();
+        await createTable();
+    }
+    window.onload = launch;
+    //setTimeout(()=>launch(),5000);
+
+    const pgInput = document.getElementById("playground-input");
+    const pgCount = document.getElementById("playground-count");
+    const pgOutput = document.getElementById("playground-output");
+    pgInput.oninput =  async () => {
+        pgCount.innerText = ([]+pgInput.value.length).padStart(2);
+        const res = (await safeEval(pgInput.value));
+        pgOutput.innerText = res[1].slice(0,58) + (res[1].length>58?"...":"");
+        pgOutput.style.color = res[0]?"red":"inherit";
+    }
+</script>
+
+
+<style>
+    .fullscreen {
+        position: fixed;
+        inset: 0;
+    }
+    .bg {
+        z-index: 5;
+        background: #000;
+        transition: background 0.1s, opacity 1s;
+        opacity: 1;
+        @starting-style {
+            opacity: 0;
+        }
+    }
+    .fg {
+        /*transition: background 0.1s, opacity 0.25s;*/
+        z-index: 15;
+        background: #000;
+        opacity: 0;
+    }
+    #win-3-dialog {
+        transition: 3s scale cubic-bezier(0,1,0,1), 3s transform cubic-bezier(0,1,0,1), 4s rotate cubic-bezier(0,1,0,1), 4s opacity cubic-bezier(0,1,0,1);
+        @starting-style {
+            rotate: -420deg;
+            /*transform: rotate3d(1,1,1,10deg);*/
+            scale: 0.5;
+            opacity: 0;
+        }
+    }
+</style>
+<script>
+    let bgDiv;
+    let fgDiv;
+    async function startAudio() {
+        mainAudio.volume = 0.7
+        mainAudio.currentTime = 0;
+        congratulated_1 = true;
+        mainAudio.preservesPitch = false;
+        // mainAudio.playbackRate = 0.5;
+        mainAudio.play();
+        crossword.style.position = "fixed";
+        crossword.style.top = "0";
+        crossword.style.left = "0";
+        crossword.style.translate = "calc(50vw - 50%) calc(50vh - 50%)";
+        crossword.style.zIndex = "10";
+        crossword.style.backgroundColor = "#FFF";
+        crossword.style.transform = "rotate3d(1, 1, 1, -120deg)";
+        bgDiv = document.createElement("div");
+        fgDiv = document.createElement("div");
+        bgDiv.classList.add("fullscreen");
+        bgDiv.classList.add("bg");
+        fgDiv.classList.add("fullscreen");
+        fgDiv.classList.add("fg");
+        document.body.appendChild(bgDiv);
+        document.body.appendChild(fgDiv);
+        await new Promise(requestAnimationFrame);
+        await new Promise(requestAnimationFrame);
+        crossword.style.transition = "transform 16s cubic-bezier(0,0.5,0,1)";
+        document.getElementById("lmk").innerHTML = document.getElementById("syt").innerHTML;
+        if (captureData.length < 350)
+            document.getElementById("cheated").style.display = "none";
+        animate();
+    }
+  function getCurrentBeat() {
+    return (((mainAudio.currentTime) / (60/180))/4) - 1;
+  }
+
+  const timings1 = [0,2,6,10,11,12,16+2,16+4,16+8,16+11,16+13];
+
+  let lastBeat = -1;
+  let startingPos = 0;
+
+    async function animate() {
+        const currentBeat = getCurrentBeat();
+        if (currentBeat > -0.5 && currentBeat < 0) {
+            crossword.style.transform = "rotate3d(1, 1, 1, 20deg)";
+        } else if (currentBeat >= 0 && currentBeat < (7+11/16)) {
+            const lastTick = Math.floor((lastBeat%2)*16);
+            const currentTick = Math.floor((currentBeat%2)*16);
+            if (lastTick != currentTick && timings1.includes(currentTick)) {
+                for (let i = 0; i < 8; i++)
+                    await replayNext();
+            }
+            startingPos = replayProgress;
+        } else if (currentBeat >= (7+11/16) && currentBeat < 8) {
+            crossword.style.transform = "translate(0px,0px) scale(0.75)";
+            if (currentBeat > (7+14/16))
+                crossword.style.transition = "transform 10s cubic-bezier(0,0.5,0,1)";
+            else
+                crossword.style.transition = "none";
+            fgDiv.style.opacity = 1;
+
+        } else if (currentBeat >= 8 && currentBeat < 16) {
+            if (currentBeat < 9) {
+                fgDiv.style.opacity = 0;
+            }
+            const progress = Math.min((currentBeat-8)/(7+12/16),1);
+            const target = (captureData.length-startingPos)*progress+startingPos - 1;
+            let lastCell;
+            while (replayProgress < target) {
+                lastCell = await replayNext();
+            }
+            if (currentBeat >= (15+12/16)) {
+                const currentTick = Math.floor((currentBeat%1)*16);
+                crossword.style.transition = (currentBeat >= (15+14/16)) ? "transform 2s cubic-bezier(0,1,0,1)" : "none";
+                crossword.style.transform = "scale(1)";
+                fgDiv.style.opacity = (currentTick % 2);
+            } else {
+                crossword.style.transition = "transform 5s cubic-bezier(.25,.75,.25,.75)";
+                if (lastCell) {
+                    const mult = 2;
+                    const coords = lastCell.dataset.yx.split(",").map((e,i)=>(parseInt(e)-[8,13][i])*-32*mult + "px").reverse();
+                    // crossword.style.transition = "transform 10s cubic-bezier(0,0.5,0,1)";
+                    crossword.style.transform = `translate(${coords}) scale(2)`;
+                }
+            }
+            
+        } else if (currentBeat >= 16) {
+            if (currentBeat < 16 + 12/16) {
+                bgDiv.style.transition = "opacity 2s cubic-bezier(0,1,0,1)";
+                crossword.style.transform = "scale(0.25)";
+                fgDiv.style.opacity = 0;
+            } else if (currentBeat < 17) {
+                bgDiv.style.opacity = 0;
+                crossword.style.transition = "transform 2s cubic-bezier(0,1,0,1)";
+                crossword.style.transform = "scale(1.25)";
+                document.getElementById("win-3-dialog").showModal();
+                return;
+            } else if (currentBeat >= 18) {
+                
+            }
+        }
+        lastBeat = currentBeat;
+        requestAnimationFrame(animate);
+    }
+</script>
+<!--
+TODO (i will probably never get around to this):
+- can't see if a row is wrong vertically if all its horizontal constraints are solved (all squared green already)
+- undo feature
+- pasting text into boxes feature
+-->
+</body>
+</html>
