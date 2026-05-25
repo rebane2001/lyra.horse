@@ -51,7 +51,6 @@
     <h3 id="h3-down">down (0/26)</h3>
     <div id="q-down"></div>
 </questions-thing>
-
 </aside>
 </main-content>
 <p>Made by <a href="https://lyra.horse/">Lyra Rebane</a>, May 2026<br>Special thanks to <a href="https://jorianwoltjer.com/">Jorian Woltjer</a> for playtesting!</p>
@@ -84,7 +83,6 @@
             columns: 2;
             margin-left:min(20px, calc(100vw - 1465px));
         }
-        
         p {
             margin: 0;
         }
@@ -857,7 +855,6 @@ function switchDir() {
     }
 </script>
 
-
 <style>
     .fullscreen {
         position: fixed;
@@ -917,7 +914,7 @@ function switchDir() {
         await new Promise(requestAnimationFrame);
         crossword.style.transition = "transform 16s cubic-bezier(0,0.5,0,1)";
         document.getElementById("lmk").innerHTML = document.getElementById("syt").innerHTML;
-        if (captureData.length < 350)
+        if (captureData.length > 350)
             document.getElementById("cheated").style.display = "none";
         animate();
     }
@@ -986,8 +983,6 @@ function switchDir() {
                 crossword.style.transform = "scale(1.25)";
                 document.getElementById("win-3-dialog").showModal();
                 return;
-            } else if (currentBeat >= 18) {
-                
             }
         }
         lastBeat = currentBeat;
