@@ -24,7 +24,7 @@
     <p>Color legend: <span style="background:#77FF77">(possibly) correct answer</span>, <span style="background:#E49BC0">invalid characters</span>, <span style="background:#EF6767">error</span>, <span style="background:#DDDDDD">pre-filled</span></p>
     <p><i>Share your thoughts on: <span id="syt"><a href="https://infosec.exchange/@rebane2001/116632169141393181">fedi</a>, <a href="https://bsky.app/profile/rebane2001.bsky.social/post/3mmn4tooht223">bsky</a>, <a href="https://twitter.com/rebane2001/status/2058693153121542388">twitter</a></span>.</i></p>
 <table data-dir="right" spellcheck="false" id=crossword></table>
-<button onclick="clearCrossword()">clear</button>
+<button onclick="clearCrossword()">clear</button> <!--<button onclick="copyEmoji()">copy as emoji (wordle-style)</button>--> <label><input id="hideletters" type=checkbox>hide letters (for sharing progress screenshots)</label>
 <h2>Status</h2>
 <result-box>
 <div data-across>
@@ -90,6 +90,14 @@
     main {
         max-width: 866px;
         width: 866px;
+    }
+    body:has(#hideletters:checked) {
+        label:has(#hideletters) {
+            color: red;
+        }
+        #crossword input {
+            color: #0000!important;
+        }
     }
     h2,h3 {
         margin: 0;
@@ -852,6 +860,19 @@ function switchDir() {
         const res = (await safeEval(pgInput.value));
         pgOutput.innerText = res[1].slice(0,58) + (res[1].length>58?"...":"");
         pgOutput.style.color = res[0]?"red":"inherit";
+    }
+
+    /* bleh */
+    function copyEmoji() {
+        const text = [...crossword.querySelectorAll("tr")].map(tr=>{
+            return [...tr.querySelectorAll("td")].map((td,i)=>{
+                if (i>26)return"";
+                if (td.dataset.qq)
+                    return "V①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳㉑㉒㉓㉔㉕㉖㉗㉘㉙㉚㉛㉜㉝㉞㉟㊱㊲㊳㊴㊵㊶㊷㊸㊹㊺㊻㊼㊽㊾㊿"[parseInt(td.dataset.qq)];
+                return "⬛";
+            }).join("")
+        }).join("\n> ");
+        console.log(text);
     }
 </script>
 
