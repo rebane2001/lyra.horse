@@ -771,7 +771,7 @@ function switchDir() {
         SOLUTION = "nope!";
     }
 
-    const sandbox = document.getElementById("sandbox");
+    let sandbox = document.getElementById("sandbox");
     const SANDBOX_URL = "data:text/html;base64," + btoa(`<!DOCTYPE html>
 <html>
     <meta http-equiv="Content-Security-Policy" content="default-src 'unsafe-eval' 'unsafe-inline'" />
@@ -793,7 +793,12 @@ function switchDir() {
     async function resetBox() {
         if (!isSetup) return;
         isSetup = false;
+        const oldbox = sandbox;
+        sandbox = document.createElement("iframe");
+        sandbox.id = 'sandbox';
+        sandbox.setAttribute("sandbox","allow-scripts");
         sandbox.src = SANDBOX_URL;
+        oldbox.parentNode.replaceChild(sandbox, oldbox);
         const promise = new Promise((resolve) => {
             sandbox.addEventListener("load", () => {
                 isSetup = true;
