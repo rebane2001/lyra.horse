@@ -10,31 +10,94 @@
   <meta property="og:description" content="hi!">
   <meta property="og:locale" content="en-us">
   <meta property="og:type" content="website">
-  <meta content="#8CFFDB" name="theme-color" />
+  <meta content="#0b0d0b" name="theme-color" />
   <style>
+    body {
+      background-color: #0d1a1a;
+      color: #afd7d7;
+      font-family: "DejaVu Sans Mono", "Courier New", monospace;
+      font-size: 16px;
+      max-width: 800px;
+      margin: 0;
+      padding: 10px;
+    }
+    a {
+      color: #87ffd7;
+    }
+    a:visited {
+      color: #5fd7d7;
+    }
+    h1 {
+      color: #ffffff;
+      font-size: 18px;
+    }
+    h2 {
+      color: #ffffff;
+      font-size: 16px;
+    }
+    h3 {
+      color: #afd7d7;
+      font-size: 16px;
+    }
+    hr {
+      border: 0;
+      border-top: 1px solid #5faf87;
+    }
     .bigLink {
-        font-size: 2em;
-        font-weight: bold;
-        color: #0078B1;
+      font-weight: bold;
     }
-    .underline {
-        text-decoration: underline;
+    .prompt {
+      color: #87ffd7;
     }
-    .badge {
-      a {
-        display: inline-block;
-        line-height: 0;
-      }
-      img {
-        image-rendering: pixelated;
-      }
-      &:hover img {
-        outline: solid 1px #000;
-      }
+    #badges {
+      border: 1px solid #5faf87;
+      padding: 10px;
+    }
+    .banner {
+      font-size: 12px;
+      line-height: 1;
+      overflow-x: auto;
+      overflow-y: hidden;
+      margin: 0 0 16px;
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    li::before {
+      content: "drwxr-xr-x  ";
+      color: #5faf87;
     }
   </style>
 </head>
 <body>
+  <pre class="banner">
+                   <span style="color:#5fd7d7">▄▄▄▄</span>
+               <span style="color:#5faf87;background:#5faf87">█</span><span style="color:#87ffd7;background:#5faf87">▄</span><span style="color:#5faf87">▄</span><span style="color:#5fd7d7">▄▄</span><span style="color:#afd7d7;background:#5fd7d7">▄</span><span style="color:#afd7d7;background:#afd7d7">██</span><span style="color:#afd7d7;background:#5fd7d7">▄▄▄</span><span style="color:#5fd7d7">▄▄</span>
+              <span style="color:#5fd7d7">▄</span><span style="color:#afd7d7;background:#5fd7d7">▄</span><span style="color:#afd7d7;background:#87d7af">▄</span><span style="color:#87d7af;background:#87ffd7">▄</span><span style="color:#5fd7d7;background:#5faf87">▄</span><span style="color:#afd7d7;background:#afd7d7">██</span><span style="color:#87d7d7;background:#afd7d7">▄</span><span style="color:#ffffff;background:#87d7d7">▄▄▄</span><span style="color:#87d7d7;background:#afd7d7">▄</span><span style="color:#5faf87;background:#5faf87">█</span><span style="color:#87ffd7;background:#5faf87">▄▄</span><span style="color:#5faf87;background:#5fd7d7">▄</span><span style="color:#5fd7d7">▄</span>
+             <span style="color:#5fd7d7;background:#5fd7d7">█</span><span style="color:#afd7d7;background:#afd7d7">███</span><span style="color:#afd7d7;background:#5fd7d7">▄</span><span style="color:#afd7d7;background:#afd7d7">█</span><span style="color:#87d7d7;background:#afd7d7">▄</span><span style="color:#ffffff;background:#87d7d7">▄</span><span style="color:#ffffff;background:#ffffff">█</span><span style="color:#87d7d7;background:#ffffff">▄▄▄</span><span style="color:#ffffff;background:#ffffff">█</span><span style="color:#5faf87;background:#5faf87">█</span><span style="color:#87ffd7;background:#87ffd7">█</span><span style="color:#87d7af;background:#87ffd7">▄</span><span style="color:#87ffd7;background:#5faf87">▄</span><span style="color:#5faf87;background:#afd7d7">▄</span><span style="color:#5fd7d7;background:#5fd7d7">█</span>
+     <span style="color:#87875f">▀</span><span style="color:#d7d7d7;background:#87875f">▄▄▄▄▄▄</span><span style="color:#5fd7d7;background:#5fd7d7">█</span><span style="color:#afd7d7;background:#afd7d7">█████</span><span style="color:#87d7d7;background:#87d7d7">█</span><span style="color:#ffffff;background:#ffffff">█</span><span style="color:#87d7d7;background:#ffffff">▄</span><span style="color:#87ffd7;background:#87d7d7">▄</span><span style="color:#87ffd7;background:#87ffd7">███</span><span style="color:#87ffd7;background:#87d7d7">▄</span><span style="color:#87ffd7;background:#87ffd7">██</span><span style="color:#5faf87;background:#5faf87">█</span><span style="color:#87ffd7;background:#87ffd7">█</span><span style="color:#5faf87;background:#5faf87">█</span><span style="color:#ffffff;background:#87d7d7">▄</span><span style="color:#87d7d7;background:#5fd7d7">▄</span><span style="color:#d7d7d7;background:#87875f">▄▄▄▄▄</span><span style="color:#d7d7d7">▄▄▄</span>
+       <span style="color:#d7d7d7;background:#d7d7d7">████</span><span style="color:#5fd7d7;background:#d7d7d7">▄</span><span style="color:#afd7d7;background:#5fd7d7">▄</span><span style="color:#afd7d7;background:#afd7d7">███</span><span style="color:#87d7d7;background:#afd7d7">▄</span><span style="color:#ffffff;background:#87d7d7">▄</span><span style="color:#87d7d7;background:#ffffff">▄</span><span style="color:#87ffd7;background:#87d7d7">▄</span><span style="color:#87ffd7;background:#87ffd7">█████████</span><span style="color:#87d7d7;background:#87ffd7">▄</span><span style="color:#5faf87;background:#5faf87">█</span><span style="color:#ffffff;background:#ffffff">█</span><span style="color:#87d7d7;background:#87d7d7">█</span><span style="color:#d7d7d7;background:#d7d7d7">████████</span><span style="color:#d7d7d7">▄</span>
+       <span style="color:#d7d7d7">▀</span><span style="color:#afaf87;background:#d7d7d7">▄▄▄</span><span style="color:#5fd7d7;background:#5fd7d7">█</span><span style="color:#afd7d7;background:#afd7d7">██</span><span style="color:#5fd7d7;background:#afd7d7">▄</span><span style="color:#5faf87;background:#5fd7d7">▄</span><span style="color:#87d7d7;background:#87d7d7">█</span><span style="color:#87ffd7;background:#87d7d7">▄</span><span style="color:#87ffd7;background:#87ffd7">█</span><span style="color:#87d7af;background:#87ffd7">▄</span><span style="color:#87ffd7;background:#87ffd7">███████</span><span style="color:#87d7d7;background:#87ffd7">▄</span><span style="color:#ffffff;background:#87d7d7">▄</span><span style="color:#ffffff;background:#ffffff">███</span><span style="color:#87d7d7;background:#87d7d7">█</span><span style="color:#afaf87;background:#d7d7d7">▄▄▄▄▄▄▄▄▄</span><span style="color:#afaf87">▄</span>
+        <span style="color:#afaf87">▀</span><span style="color:#d7d7d7;background:#afaf87">▄▄</span><span style="color:#5fd7d7;background:#5fd7d7">█</span><span style="color:#d7d7d7;background:#5fd7d7">▄▄</span><span style="color:#d7d7d7;background:#afaf87">▄</span><span style="color:#5faf87;background:#5faf87">█</span><span style="color:#87ffd7;background:#87ffd7">██</span><span style="color:#000000;background:#87d7af">▄</span><span style="color:#87ffd7;background:#87ffd7">████</span><span style="color:#000000;background:#87ffd7">▄</span><span style="color:#87ffd7;background:#87ffd7">██</span><span style="color:#87ffd7;background:#87d7d7">▄▄</span><span style="color:#87d7d7;background:#87d7d7">█</span><span style="color:#ffffff;background:#87d7d7">▄</span><span style="color:#ffffff;background:#ffffff">█</span><span style="color:#87d7d7;background:#87d7d7">█</span><span style="color:#d7d7d7;background:#afaf87">▄▄▄▄▄▄▄▄▄▄▄</span><span style="color:#d7d7d7">▄</span>
+         <span style="color:#d7d7d7;background:#d7d7d7">█████</span><span style="color:#5faf87;background:#5faf87">█</span><span style="color:#87ffd7;background:#5faf87">▄</span><span style="color:#87d7af;background:#87ffd7">▄</span><span style="color:#87ffd7;background:#87ffd7">█</span><span style="color:#87ffd7;background:#000000">▄</span><span style="color:#000000;background:#87ffd7">▄▄▄</span><span style="color:#87ffd7;background:#000000">▄</span><span style="color:#87ffd7;background:#87ffd7">████</span><span style="color:#87d7d7;background:#87ffd7">▄</span><span style="color:#ffffff;background:#87d7d7">▄</span><span style="color:#ffffff;background:#ffffff">█</span><span style="color:#87d7d7;background:#ffffff">▄</span><span style="color:#5fd7d7;background:#87d7d7">▄</span><span style="color:#d7d7d7;background:#d7d7d7">████████████</span>
+         <span style="color:#d7d7d7;background:#d7d7d7">█████</span><span style="color:#d7d7d7;background:#5faf87">▄</span><span style="color:#5faf87;background:#87ffd7">▄</span><span style="color:#5faf87;background:#5faf87">█</span><span style="color:#87ffd7;background:#87ffd7">██████████</span><span style="color:#87d7d7;background:#87d7d7">█</span><span style="color:#ffffff;background:#ffffff">█</span><span style="color:#87d7d7;background:#ffffff">▄</span><span style="color:#afd7d7;background:#87d7d7">▄</span><span style="color:#5fd7d7;background:#5fd7d7">█</span><span style="color:#5faf87;background:#d7d7d7">▄▄▄</span><span style="color:#87ffd7;background:#5faf87">▄▄▄▄▄▄▄</span><span style="color:#5faf87;background:#d7d7d7">▄</span><span style="color:#5fd7d7;background:#d7d7d7">▄</span><span style="color:#5fd7d7">▄▄</span><span style="color:#87d7d7">▄</span>
+         <span style="color:#afaf87;background:#d7d7d7">▄▄▄▄▄▄▄▄</span><span style="color:#afaf87;background:#5faf87">▄▄▄▄▄</span><span style="color:#5faf87;background:#5faf87">█</span><span style="color:#87ffd7;background:#87ffd7">███</span><span style="color:#87ffd7;background:#87d7d7">▄▄</span><span style="color:#5fd7d7;background:#87d7d7">▄</span><span style="color:#afd7d7;background:#afd7d7">██</span><span style="color:#5fd7d7;background:#5fd7d7">█</span><span style="color:#87ffd7;background:#87ffd7">██████</span><span style="color:#5faf87;background:#87ffd7">▄</span><span style="color:#ffaf5f;background:#87ffd7">▄</span><span style="color:#d7d787;background:#87ffd7">▄</span><span style="color:#87d7af;background:#d7d787">▄</span><span style="color:#ffaf5f;background:#ffaf5f">█</span><span style="color:#5faf87;background:#5faf87">█</span><span style="color:#5fd7d7;background:#87d7d7">▄</span><span style="color:#afd7d7;background:#87d7d7">▄</span><span style="color:#87d7d7;background:#ffffff">▄</span><span style="color:#ffffff;background:#87d7d7">▄</span><span style="color:#87d7d7;background:#5fd7d7">▄</span><span style="color:#5fd7d7">▄</span>
+        <span style="color:#d7d7d7;background:#afaf87">▄▄▄▄▄▄▄▄▄▄▄</span><span style="color:#5faf87;background:#afaf87">▄</span><span style="color:#87d7af;background:#5faf87">▄▄▄</span><span style="color:#5faf87;background:#87ffd7">▄</span><span style="color:#87ffd7;background:#87ffd7">███</span><span style="color:#5fd7d7;background:#5fd7d7">█</span><span style="color:#5fd7d7;background:#afd7d7">▄▄</span><span style="color:#87ffd7;background:#5fd7d7">▄</span><span style="color:#5faf87;background:#87ffd7">▄</span><span style="color:#87ffd7;background:#87ffd7">█████</span><span style="color:#5faf87;background:#5faf87">█</span><span style="color:#87ffd7;background:#87ffd7">█</span><span style="color:#ffaf5f;background:#ffaf5f">█</span><span style="color:#87ffd7;background:#87d7af">▄</span><span style="color:#87d7af;background:#87ffd7">▄</span><span style="color:#ffaf5f;background:#ffaf5f">█</span><span style="color:#87ffd7;background:#87ffd7">█</span><span style="color:#5faf87;background:#5faf87">█</span><span style="color:#d7d7d7;background:#5fd7d7">▄</span><span style="color:#5fd7d7;background:#afd7d7">▄</span><span style="color:#87d7d7;background:#87d7d7">█</span><span style="color:#ffffff;background:#ffffff">█</span><span style="color:#87d7d7;background:#87d7d7">█</span><span style="color:#afd7d7;background:#5fd7d7">▄</span><span style="color:#5fd7d7">▄</span>
+       <span style="color:#d7d7d7;background:#d7d7d7">██████████</span><span style="color:#5faf87;background:#d7d7d7">▄</span><span style="color:#87d7af;background:#5faf87">▄</span><span style="color:#87d7af;background:#87d7af">███</span><span style="color:#5faf87;background:#87d7af">▄</span><span style="color:#87ffd7;background:#5faf87">▄▄▄▄▄▄</span><span style="color:#5faf87;background:#87ffd7">▄</span><span style="color:#5faf87;background:#5faf87">█</span><span style="color:#87ffd7;background:#87ffd7">██</span><span style="color:#5faf87;background:#87ffd7">▄▄</span><span style="color:#87ffd7;background:#5faf87">▄▄▄</span><span style="color:#5faf87;background:#87ffd7">▄▄</span><span style="color:#87ffd7;background:#ffaf5f">▄▄</span><span style="color:#87ffd7;background:#87ffd7">█</span><span style="color:#5faf87;background:#87ffd7">▄</span><span style="color:#d7d7d7;background:#5faf87">▄</span><span style="color:#5fd7d7;background:#d7d7d7">▄</span><span style="color:#afd7d7;background:#5fd7d7">▄</span><span style="color:#87d7d7;background:#87d7d7">█</span><span style="color:#ffffff;background:#ffffff">██</span><span style="color:#87d7d7;background:#87d7d7">█</span><span style="color:#afd7d7;background:#afd7d7">█</span><span style="color:#5fd7d7;background:#5fd7d7">█</span>
+      <span style="color:#3a3a3a">▄</span><span style="color:#3a3a3a;background:#3a3a3a">█</span><span style="color:#3a3a3a">▀</span> <span style="color:#87875f">▀▀▀</span><span style="color:#d7d7d7;background:#87875f">▄▄▄▄</span><span style="color:#5faf87;background:#5faf87">█</span><span style="color:#5faf87;background:#87d7af">▄▄▄</span><span style="color:#5faf87;background:#5faf87">█</span><span style="color:#87ffd7;background:#87ffd7">██████████</span><span style="color:#5faf87;background:#5faf87">█</span><span style="color:#87ffd7;background:#87ffd7">██████</span><span style="color:#5fd7d7;background:#87ffd7">▄</span><span style="color:#5fd7d7;background:#5faf87">▄</span><span style="color:#5fd7d7;background:#87ffd7">▄▄▄</span><span style="color:#afd7d7;background:#5fd7d7">▄</span><span style="color:#afd7d7;background:#afd7d7">██</span><span style="color:#87d7d7;background:#87d7d7">█</span><span style="color:#ffffff;background:#ffffff">██</span><span style="color:#87d7d7;background:#87d7d7">█</span><span style="color:#afd7d7;background:#afd7d7">██</span><span style="color:#5fd7d7;background:#5fd7d7">█</span>
+      <span style="color:#3a3a3a;background:#3a3a3a">█</span><span style="color:#3a3a3a">▄</span>       <span style="color:#d7d7d7">▀▀</span><span style="color:#d7d7d7;background:#d7d7d7">████</span><span style="color:#d7d7d7;background:#5faf87">▄</span><span style="color:#5faf87;background:#87ffd7">▄▄▄▄▄</span><span style="color:#d7d7d7;background:#5faf87">▄▄▄▄</span><span style="color:#5fd7d7;background:#5faf87">▄▄</span><span style="color:#5fd7d7;background:#87ffd7">▄▄▄▄</span><span style="color:#afd7d7;background:#5fd7d7">▄▄</span><span style="color:#afd7d7;background:#afd7d7">██████</span><span style="color:#87d7d7;background:#afd7d7">▄▄</span><span style="color:#ffffff;background:#87d7d7">▄</span><span style="color:#ffffff;background:#ffffff">██</span><span style="color:#87d7d7;background:#87d7d7">█</span><span style="color:#afd7d7;background:#afd7d7">██</span><span style="color:#5fd7d7;background:#5fd7d7">█</span><span style="color:#d7d7d7">▄</span>
+    <span style="color:#3a3a3a">▄</span>  <span style="color:#3a3a3a">▀</span><span style="color:#3a3a3a;background:#3a3a3a">█</span>         <span style="color:#d7d7d7;background:#afaf87">▄▄▄▄▄▄▄▄▄▄▄</span><span style="color:#5fd7d7;background:#afaf87">▄</span><span style="color:#afd7d7;background:#5fd7d7">▄</span><span style="color:#afd7d7;background:#afd7d7">████████</span><span style="color:#87d7d7;background:#afd7d7">▄▄▄▄</span><span style="color:#ffffff;background:#87d7d7">▄▄</span><span style="color:#ffffff;background:#ffffff">████</span><span style="color:#87d7d7;background:#ffffff">▄</span><span style="color:#afd7d7;background:#87d7d7">▄</span><span style="color:#afd7d7;background:#afd7d7">█</span><span style="color:#5fd7d7;background:#afd7d7">▄</span><span style="color:#d7d7d7;background:#5fd7d7">▄</span><span style="color:#d7d7d7;background:#afaf87">▄</span>
+     <span style="color:#3a3a3a">▀▀▀▀</span>       <span style="color:#87875f">▀▀▀</span><span style="color:#3a3a3a;background:#87875f">▄▄</span><span style="color:#87875f">▀▀▀▀▀▀▀</span><span style="color:#5fd7d7;background:#87875f">▄</span><span style="color:#afd7d7;background:#5fd7d7">▄</span><span style="color:#afd7d7;background:#afd7d7">█</span><span style="color:#87d7d7;background:#afd7d7">▄▄▄▄▄▄</span><span style="color:#ffffff;background:#87d7d7">▄▄</span><span style="color:#ffffff;background:#ffffff">████████</span><span style="color:#87d7d7;background:#ffffff">▄</span><span style="color:#afd7d7;background:#87d7d7">▄</span><span style="color:#afd7d7;background:#afd7d7">██</span><span style="color:#5fd7d7;background:#afd7d7">▄</span><span style="color:#5fd7d7">▀</span><span style="color:#87875f">▀</span>
+                   <span style="color:#3a3a3a">▄</span><span style="color:#3a3a3a;background:#3a3a3a">█</span>       <span style="color:#5fd7d7;background:#5fd7d7">█</span><span style="color:#87d7d7;background:#afd7d7">▄</span><span style="color:#ffffff;background:#87d7d7">▄</span><span style="color:#ffffff;background:#ffffff">████████</span><span style="color:#87d7d7;background:#ffffff">▄▄▄▄▄▄</span><span style="color:#afd7d7;background:#87d7d7">▄▄</span><span style="color:#afd7d7;background:#afd7d7">█</span><span style="color:#5fd7d7;background:#afd7d7">▄▄</span><span style="color:#3a3a3a;background:#5fd7d7">▄</span><span style="color:#3a3a3a;background:#3a3a3a">█</span>
+                  <span style="color:#3a3a3a;background:#3a3a3a">█</span><span style="color:#3a3a3a">▀</span>  <span style="color:#3a3a3a">▄</span>     <span style="color:#5fd7d7">▀</span><span style="color:#87d7d7;background:#87d7d7">█</span><span style="color:#ffffff;background:#ffffff">███</span><span style="color:#87d7d7;background:#ffffff">▄▄▄▄</span><span style="color:#87d7d7">▀▀</span>    <span style="color:#5fd7d7">▄</span><span style="color:#5fd7d7;background:#5fd7d7">█</span><span style="color:#5fd7d7">▀▀▀</span> <span style="color:#3a3a3a;background:#3a3a3a">█</span><span style="color:#3a3a3a">▀</span>  <span style="color:#3a3a3a">▄</span>
+                  <span style="color:#3a3a3a">▀▀▀▀</span>       <span style="color:#87d7d7;background:#87d7d7">█</span><span style="color:#ffffff;background:#ffffff">██</span><span style="color:#87d7d7;background:#87d7d7">█</span>                <span style="color:#3a3a3a">▀▀▀▀</span>
+                              <span style="color:#87d7d7;background:#87d7d7">██</span>
+                               <span style="color:#87d7d7">▀</span>
+  </pre>
+  <p>Linux lyra.horse 2.6.32 #1 SMP i686 GNU/Linux</p>
+  <p>Welcome to lyra.horse. Type 'help' for a list of commands.</p>
+  <p><span class="prompt">lyra@horse:~$</span> cat README</p>
   <h1>lyra.horse</h1>
   <p>hi! i'm lyra rebane (<a href="./pronouns.html">she/it</a>) and this is my cool website, i hope you enjoy your stay!</p>
   <hr/>
@@ -92,6 +155,7 @@
     <li>bluesky: <a href="https://bsky.app/profile/rebane2001.bsky.social">@rebane2001.bsky.social</a></li>
   </ul>
   <hr/>
+  <p><span class="prompt">lyra@horse:~$</span> _</p>
   <div id="badges">
     <!-- note: i've converted some of the gif badges into apngs instead so they take up less space -->
     <span class="badge"><a href="https://lyra.horse/"><img alt="badge for lyra.horse" loading="lazy" src="./badges/lyra.horse.png"/></a></span>
@@ -112,29 +176,6 @@
     <span class="badge"><a href="https://spax.zone/"><img alt="badge for spax.zone" loading="lazy" src="./badges/spax.zone.gif"/></a></span>
     <span class="badge"><a href="https://daudix.one/"><img alt="badge for daudix.one" loading="lazy" src="./badges/daudix.one.gif"/></a></span>
   </div>
-  <pre style="display:none">
-                   [38;5;80m▄▄▄▄[39m
-               [48;5;72;38;5;72m█[38;5;122m▄[49;38;5;72m▄[38;5;80m▄▄[48;5;80;38;5;152m▄[48;5;152m██[48;5;80m▄▄▄[49;38;5;80m▄▄[39m
-              [38;5;80m▄[48;5;80;38;5;152m▄[48;5;115m▄[48;5;122;38;5;115m▄[48;5;72;38;5;80m▄[48;5;152;38;5;152m██[38;5;116m▄[48;5;116;38;5;231m▄▄▄[48;5;152;38;5;116m▄[48;5;72;38;5;72m█[38;5;122m▄▄[48;5;80;38;5;72m▄[49;38;5;80m▄[39m
-             [48;5;80;38;5;80m█[48;5;152;38;5;152m███[48;5;80m▄[48;5;152m█[38;5;116m▄[48;5;116;38;5;231m▄[48;5;231m█[38;5;116m▄▄▄[38;5;231m█[48;5;72;38;5;72m█[48;5;122;38;5;122m█[38;5;115m▄[48;5;72;38;5;122m▄[48;5;152;38;5;72m▄[48;5;80;38;5;80m█[49;39m
-     [38;5;101m▀[48;5;101;38;5;188m▄▄▄▄▄▄[48;5;80;38;5;80m█[48;5;152;38;5;152m█████[48;5;116;38;5;116m█[48;5;231;38;5;231m█[38;5;116m▄[48;5;116;38;5;122m▄[48;5;122m███[48;5;116m▄[48;5;122m██[48;5;72;38;5;72m█[48;5;122;38;5;122m█[48;5;72;38;5;72m█[48;5;116;38;5;231m▄[48;5;80;38;5;116m▄[48;5;101;38;5;188m▄▄▄▄▄[49m▄▄▄[39m
-       [48;5;188;38;5;188m████[38;5;80m▄[48;5;80;38;5;152m▄[48;5;152m███[38;5;116m▄[48;5;116;38;5;231m▄[48;5;231;38;5;116m▄[48;5;116;38;5;122m▄[48;5;122m█████████[38;5;116m▄[48;5;72;38;5;72m█[48;5;231;38;5;231m█[48;5;116;38;5;116m█[48;5;188;38;5;188m████████[49m▄[39m
-       [38;5;188m▀[48;5;188;38;5;144m▄▄▄[48;5;80;38;5;80m█[48;5;152;38;5;152m██[38;5;80m▄[48;5;80;38;5;72m▄[48;5;116;38;5;116m█[38;5;122m▄[48;5;122m█[38;5;115m▄[38;5;122m███████[38;5;116m▄[48;5;116;38;5;231m▄[48;5;231m███[48;5;116;38;5;116m█[48;5;188;38;5;144m▄▄▄▄▄▄▄▄▄[49m▄[39m
-        [38;5;144m▀[48;5;144;38;5;188m▄▄[48;5;80;38;5;80m█[38;5;188m▄▄[48;5;144m▄[48;5;72;38;5;72m█[48;5;122;38;5;122m██[48;5;115;38;5;16m▄[48;5;122;38;5;122m████[38;5;16m▄[38;5;122m██[48;5;116m▄▄[38;5;116m█[38;5;231m▄[48;5;231m█[48;5;116;38;5;116m█[48;5;144;38;5;188m▄▄▄▄▄▄▄▄▄▄▄[49m▄[39m
-         [48;5;188;38;5;188m█████[48;5;72;38;5;72m█[38;5;122m▄[48;5;122;38;5;115m▄[38;5;122m█[48;5;16m▄[48;5;122;38;5;16m▄▄▄[48;5;16;38;5;122m▄[48;5;122m████[38;5;116m▄[48;5;116;38;5;231m▄[48;5;231m█[38;5;116m▄[48;5;116;38;5;80m▄[48;5;188;38;5;188m████████████[49;39m
-         [48;5;188;38;5;188m█████[48;5;72m▄[48;5;122;38;5;72m▄[48;5;72m█[48;5;122;38;5;122m██████████[48;5;116;38;5;116m█[48;5;231;38;5;231m█[38;5;116m▄[48;5;116;38;5;152m▄[48;5;80;38;5;80m█[48;5;188;38;5;72m▄▄▄[48;5;72;38;5;122m▄▄▄▄▄▄▄[48;5;188;38;5;72m▄[38;5;80m▄[49m▄▄[38;5;116m▄[39m
-         [48;5;188;38;5;144m▄▄▄▄▄▄▄▄[48;5;72m▄▄▄▄▄[38;5;72m█[48;5;122;38;5;122m███[48;5;116m▄▄[38;5;80m▄[48;5;152;38;5;152m██[48;5;80;38;5;80m█[48;5;122;38;5;122m██████[38;5;72m▄[38;5;215m▄[38;5;186m▄[48;5;186;38;5;115m▄[48;5;215;38;5;215m█[48;5;72;38;5;72m█[48;5;116;38;5;80m▄[38;5;152m▄[48;5;231;38;5;116m▄[48;5;116;38;5;231m▄[48;5;80;38;5;116m▄[49;38;5;80m▄[39m
-        [48;5;144;38;5;188m▄▄▄▄▄▄▄▄▄▄▄[38;5;72m▄[48;5;72;38;5;115m▄▄▄[48;5;122;38;5;72m▄[38;5;122m███[48;5;80;38;5;80m█[48;5;152m▄▄[48;5;80;38;5;122m▄[48;5;122;38;5;72m▄[38;5;122m█████[48;5;72;38;5;72m█[48;5;122;38;5;122m█[48;5;215;38;5;215m█[48;5;115;38;5;122m▄[48;5;122;38;5;115m▄[48;5;215;38;5;215m█[48;5;122;38;5;122m█[48;5;72;38;5;72m█[48;5;80;38;5;188m▄[48;5;152;38;5;80m▄[48;5;116;38;5;116m█[48;5;231;38;5;231m█[48;5;116;38;5;116m█[48;5;80;38;5;152m▄[49;38;5;80m▄[39m
-       [48;5;188;38;5;188m██████████[38;5;72m▄[48;5;72;38;5;115m▄[48;5;115m███[38;5;72m▄[48;5;72;38;5;122m▄▄▄▄▄▄[48;5;122;38;5;72m▄[48;5;72m█[48;5;122;38;5;122m██[38;5;72m▄▄[48;5;72;38;5;122m▄▄▄[48;5;122;38;5;72m▄▄[48;5;215;38;5;122m▄▄[48;5;122m█[38;5;72m▄[48;5;72;38;5;188m▄[48;5;188;38;5;80m▄[48;5;80;38;5;152m▄[48;5;116;38;5;116m█[48;5;231;38;5;231m██[48;5;116;38;5;116m█[48;5;152;38;5;152m█[48;5;80;38;5;80m█[49;39m
-      [38;5;237m▄[48;5;237m█[49m▀[39m [38;5;101m▀▀▀[48;5;101;38;5;188m▄▄▄▄[48;5;72;38;5;72m█[48;5;115m▄▄▄[48;5;72m█[48;5;122;38;5;122m██████████[48;5;72;38;5;72m█[48;5;122;38;5;122m██████[38;5;80m▄[48;5;72m▄[48;5;122m▄▄▄[48;5;80;38;5;152m▄[48;5;152m██[48;5;116;38;5;116m█[48;5;231;38;5;231m██[48;5;116;38;5;116m█[48;5;152;38;5;152m██[48;5;80;38;5;80m█[49;39m
-      [48;5;237;38;5;237m█[49m▄[39m       [38;5;188m▀▀[48;5;188m████[48;5;72m▄[48;5;122;38;5;72m▄▄▄▄▄[48;5;72;38;5;188m▄▄▄▄[38;5;80m▄▄[48;5;122m▄▄▄▄[48;5;80;38;5;152m▄▄[48;5;152m██████[38;5;116m▄▄[48;5;116;38;5;231m▄[48;5;231m██[48;5;116;38;5;116m█[48;5;152;38;5;152m██[48;5;80;38;5;80m█[49;38;5;188m▄[39m
-    [38;5;237m▄[39m  [38;5;237m▀[48;5;237m█[49;39m         [48;5;144;38;5;188m▄▄▄▄▄▄▄▄▄▄▄[38;5;80m▄[48;5;80;38;5;152m▄[48;5;152m████████[38;5;116m▄▄▄▄[48;5;116;38;5;231m▄▄[48;5;231m████[38;5;116m▄[48;5;116;38;5;152m▄[48;5;152m█[38;5;80m▄[48;5;80;38;5;188m▄[48;5;144m▄[49;39m
-     [38;5;237m▀▀▀▀[39m       [38;5;101m▀▀▀[48;5;101;38;5;237m▄▄[49;38;5;101m▀▀▀▀▀▀▀[48;5;101;38;5;80m▄[48;5;80;38;5;152m▄[48;5;152m█[38;5;116m▄▄▄▄▄▄[48;5;116;38;5;231m▄▄[48;5;231m████████[38;5;116m▄[48;5;116;38;5;152m▄[48;5;152m██[38;5;80m▄[49m▀[38;5;101m▀[39m
-                   [38;5;237m▄[48;5;237m█[49;39m       [48;5;80;38;5;80m█[48;5;152;38;5;116m▄[48;5;116;38;5;231m▄[48;5;231m████████[38;5;116m▄▄▄▄▄▄[48;5;116;38;5;152m▄▄[48;5;152m█[38;5;80m▄▄[48;5;80;38;5;237m▄[48;5;237m█[49;39m
-                  [48;5;237;38;5;237m█[49m▀[39m  [38;5;237m▄[39m     [38;5;80m▀[48;5;116;38;5;116m█[48;5;231;38;5;231m███[38;5;116m▄▄▄▄[49m▀▀[39m    [38;5;80m▄[48;5;80m█[49m▀▀▀[39m [48;5;237;38;5;237m█[49m▀[39m  [38;5;237m▄[39m
-                  [38;5;237m▀▀▀▀[39m       [48;5;116;38;5;116m█[48;5;231;38;5;231m██[48;5;116;38;5;116m█[49;39m                [38;5;237m▀▀▀▀[39m
-                              [48;5;116;38;5;116m██[49;39m
-                               [38;5;116m▀[39m
-  </pre>
+  
 </body>
 </html>
