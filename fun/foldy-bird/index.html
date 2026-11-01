@@ -93,6 +93,8 @@
 <script>
 	let birbVel = 0;
 	let birbPos = 50;
+	if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent) && !navigator?.devicePosture?.type)
+		document.querySelector(".safariNote").style.display = "block";
 	navigator.devicePosture.addEventListener("change", () => {
 		if (navigator.devicePosture.type == "continuous") flap();
 	});
@@ -183,8 +185,6 @@
 		tickPipes(pipes, birbBounds);
 		counter.innerText = score;
 	}
-	if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent))
-		document.querySelector(".safariNote").style.display = "block";
 	setInterval(loop,1000/60);
 </script>
 </body>
