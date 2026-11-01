@@ -84,6 +84,7 @@
 	<p style="font-size:50%;margin:10px;max-width:50vh">by <a href="https://lyra.horse" style="color:darkblue">rebane2001</a></p>
 	<p style="font-size:40%;margin:10px;margin-top:30px;max-width:50vh">This game can only be played on foldable devices. At the moment, only Chrome supports the required API.</p>
 	<p style="font-size:40%;margin:10px;margin-top:30px;max-width:50vh">Play this game at your own risk and only on your own devices.</p>
+	<p style="font-size:40%;margin:10px;margin-top:30px;max-width:50vh;display:none" class="safariNote">Hint: You can play on the iPhone Duo by enabling: Settings -> Apps -> Safari -> Advanced -> Feature Flags -> Device Posture API</p>
 	<p>Fold to start!</p>
 </game-ui>
 <score-counter>0</score-counter>
@@ -182,6 +183,8 @@
 		tickPipes(pipes, birbBounds);
 		counter.innerText = score;
 	}
+	if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent))
+		document.querySelector(".safariNote").style.display = "block";
 	setInterval(loop,1000/60);
 </script>
 </body>
